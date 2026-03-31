@@ -1,0 +1,37 @@
+#pragma once
+#include <initializer_list>
+
+#define MEM_STEP 15
+
+int calculate_capacity(int size);
+
+class Vector;
+
+class MemData {
+    double* _data;             // хранилище данных
+    size_t _size;              // размер заполненной части хранилища
+    size_t _capacity;          // вместимость хранилища
+public:
+    MemData(size_t size = 0);                // конструктор по размеру + по умолчанию
+    MemData(std::initializer_list<double> list);  // конструктор по списку инициализации
+    MemData(double* data, size_t size);                // конструктор инициализации
+    MemData(const MemData& memdata);                 // конструктор копирования
+    MemData(MemData&& memdata);                      // конструктор с move-семантикой
+    ~MemData();                              // деструктор
+
+    inline bool is_empty() const noexcept;   // проверка на пустоту
+    inline bool is_full() const noexcept;    // проверка на переполнение
+
+    inline size_t size() const noexcept;                 // геттер размера
+    inline size_t capacity() const noexcept;             // геттер вместимости
+    inline const double* const data() const noexcept;    // геттер хранилища
+
+    void set_memory(size_t size) noexcept;                                         // установка памяти без сохранения данных
+    void reset_memory(size_t size, size_t start_index = 0) noexcept;          // перевыделение памяти с сохранением данных
+    inline void clear_memory() noexcept;                                             // очистка памяти
+
+    MemData& operator=(const MemData& other) noexcept;         // оператор присваивания
+    MemData& operator=(MemData&& other) noexcept;              // оператор присваивания с move-семантикой
+
+    friend class Vector;
+};
