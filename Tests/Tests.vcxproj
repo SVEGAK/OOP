@@ -97,7 +97,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="list_of_tests.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -112,13 +111,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="test_CDate.cpp" />
+    <ClCompile Include="test_cdate.cpp" />
     <ClCompile Include="test_complex.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\C unn\Complex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="test_fraction.cpp" />
     <ClCompile Include="test_stl.cpp" />
     <ClCompile Include="test_time.cpp" />
+    <ClCompile Include="test_vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

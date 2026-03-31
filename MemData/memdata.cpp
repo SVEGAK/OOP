@@ -1,7 +1,7 @@
 #pragma once
 #include "memdata.h"
 
-MemData::MemData(size_t size = 0) {
+MemData::MemData(size_t size) {
 	_size = size;
 	_capacity = calculate_capacity(_size);
 	_data = new double[_capacity];
@@ -37,7 +37,7 @@ MemData::MemData(const MemData& memdata)
 		_data[i] = memdata._data[i];
 	}
 }
-MemData::MemData(MemData&& memdata)
+MemData::MemData(MemData&& memdata) noexcept
 {
 	_size = memdata._size;
 	_capacity = memdata._capacity;
@@ -52,32 +52,7 @@ MemData::~MemData()
 		delete[] _data;
 	}
 }
-inline bool MemData::is_empty() const noexcept
-{
-	if (_size > 0) { 
-		return false;
-	}
-	return true;
-}
-inline bool MemData::is_full() const noexcept
-{
-	if (_size == _capacity) {
-		return true;
-	}
-	return false;
-}
-inline size_t MemData::size() const noexcept
-{
-	return _size;
-};
-inline size_t MemData::capacity() const noexcept
-{
-	return _capacity;
-}
-inline const double* const MemData::data() const noexcept
-{
-	return _data;
-}
+
 void MemData::set_memory(size_t size) noexcept
 {
 	_size = size;
@@ -89,6 +64,12 @@ void MemData::set_memory(size_t size) noexcept
 void MemData::reset_memory(size_t size, size_t start_index) noexcept
 {
 	if (size == _size) {
+		double* old = _data;
+		_data = new double[_capacity];
+		for (size_t i = 0; i < _size; i++) {
+			_data[i] = old[i + start_index];
+		}
+		delete[] old;
 		return;
 	}
 	size_t old_size = _size;
@@ -112,16 +93,10 @@ void MemData::reset_memory(size_t size, size_t start_index) noexcept
 		}
 		delete[] old;
 	}
-	
+	return;
 }
 
-inline void MemData::clear_memory() noexcept // решил сделать inline, тк функция достаточно маленькая
-{
-	_size = 0;
-	_capacity = 0;
-	delete[] _data;
-	_data = nullptr;
-}
+
 
 MemData& MemData::operator=(const MemData& other) noexcept
 {
@@ -142,15 +117,13 @@ MemData& MemData::operator=(MemData&& other) noexcept
 		(*this)._size = other._size;
 		(*this)._capacity = other._capacity;
 		(*this)._data = other._data;
-		other.clear_memory();
+		other._size = 0;
+		other._capacity = 0;
+		other._data = nullptr;
 	}
 	return (*this);
 };
 
 
 
-int calculate_capacity(int size)
-{
-	int res = size + MEM_STEP;
-	return res;
-}
+
