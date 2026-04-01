@@ -505,3 +505,14 @@ LongNumber operator-(const LongNumber& lnum, long long int num)
 	return lnum - LongNumber(num);
 }
 
+std::string LongNumber:: to_string()
+{
+	std::string res_str;
+	if (_sign == -1) {
+		res_str = '-';
+	}
+	for (size_t i = 0; i < _len; i++) {
+		res_str += static_cast<char>(_lnumber[i] + '0');
+	}
+	return res_str;
+};

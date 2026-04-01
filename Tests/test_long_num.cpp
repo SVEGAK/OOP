@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "long_number.h"
-
+#define OTHER_TESTS
+//#define MY_TESTS
+#ifdef MY_TESTS
 TEST(ClassLongNumber, check_default_constructor) {
 	LongNumber n1;
 	EXPECT_EQ(n1.get_lnum(), 0);
@@ -664,3 +666,237 @@ TEST(ClassLongNumber, operator_minus_res_negative) {
 	EXPECT_EQ(result.get_lnum(), 70);
 	EXPECT_EQ(result.get_sign(), -1);
 };
+#endif
+#ifdef OTHER_TESTS
+TEST(ClassLongNumber, can_create_with_default_constructor) {
+	LongNumber ln;
+	EXPECT_EQ(ln.to_string(), "0");
+}
+
+TEST(ClassLongNumber, can_create_with_init_constructor) {
+	LongNumber ln("42322");
+	EXPECT_EQ(ln.to_string(), "42322");
+}
+
+TEST(ClassLongNumber, can_create_with_copy_constructor) {
+	LongNumber ln1("45654523");
+	LongNumber ln2(ln1);
+	EXPECT_EQ(ln2.to_string(), "45654523");
+}
+
+TEST(ClassLongNumber, can_assigment_operation) {
+	LongNumber ln1("45654523");
+	LongNumber ln2;
+
+	ln2 = ln1;
+
+	EXPECT_EQ(ln2.to_string(), "45654523");
+}
+
+TEST(ClassLongNumber, can_apply_unary_minus_) {
+	LongNumber ln1("45654523");
+	LongNumber ln2, ln3;
+
+	ln2 = -ln1;
+	ln3 = -ln2;
+
+	EXPECT_EQ(ln1.to_string(), "45654523");
+	EXPECT_EQ(ln2.to_string(), "-45654523");
+	EXPECT_EQ(ln3.to_string(), "45654523");
+}
+
+TEST(ClassLongNumber, can_compare_greater_positive_signs) {
+	LongNumber ln_7523("7523");
+	LongNumber ln_523("523");
+
+	EXPECT_TRUE(ln_7523 > ln_523);
+	EXPECT_FALSE(ln_523 > ln_7523);
+}
+TEST(ClassLongNumber, can_compare_greater_negative_signs) {
+	LongNumber ln__563("-563");
+	LongNumber ln__425645("-425645");
+
+	EXPECT_TRUE(ln__563 > ln__425645);
+	EXPECT_FALSE(ln__425645 > ln__563);
+}
+TEST(ClassLongNumber, can_compare_greater_different_signs) {
+	LongNumber ln_523("523");
+	LongNumber ln__563("-563");
+
+	EXPECT_TRUE(ln_523 > ln__563);
+	EXPECT_FALSE(ln__563 > ln_523);
+}
+TEST(ClassLongNumber, can_compare_eq) {
+	LongNumber ln_4463("4463");
+	LongNumber ln_124463("124463");
+	LongNumber ln__4463("-4463");
+
+	EXPECT_TRUE(ln_4463 == ln_4463);
+	EXPECT_TRUE(ln__4463 == ln__4463);
+
+	EXPECT_FALSE(ln_4463 == ln__4463);
+	EXPECT_FALSE(ln_4463 == ln_124463);
+}
+
+TEST(ClassLongNumber, can_add_positive_numbers_static_digits_of_numbers) { //сложение без увеличение разряда
+	LongNumber ln_0;
+	LongNumber ln_4212("4212");
+	LongNumber ln_4463("4463");
+	LongNumber res;
+
+	res = ln_4212 + ln_4463;
+	EXPECT_EQ(res.to_string(), "8675");
+
+	res = ln_0 + ln_0;
+	EXPECT_EQ(res.to_string(), "0");
+}
+TEST(ClassLongNumber, can_add_positive_numbers_increase_digits_of_numbers) { //сложение с увеличением разряда
+	LongNumber ln_99999("99999");
+	LongNumber ln_1("1");
+	LongNumber res;
+
+	res = ln_99999 + ln_1;
+	EXPECT_EQ(res.to_string(), "100000");
+}
+
+TEST(ClassLongNumber, can_add_negitive_numbers_digit_of_numbers_static) {
+	LongNumber ln__4463("-4463");
+	LongNumber ln__523("-523");
+	LongNumber res;
+
+	res = ln__523 + ln__4463;
+	EXPECT_EQ(res.to_string(), "-4986");
+}
+
+TEST(ClassLongNumber, can_add_negitive_numbers_increase_digit_of_numbers) {
+	LongNumber ln__4463("-4463");
+	LongNumber ln__6842("-6842");
+	LongNumber res;
+	res = ln__4463 + ln__6842;
+	EXPECT_EQ(res.to_string(), "-11305");
+}
+TEST(ClassLongNumber, can_add_numbers_with_different_sign_negative) {
+	LongNumber ln__4463("-4463");
+	LongNumber ln_42("42");
+
+	LongNumber res;
+
+	res = ln__4463 + ln_42;
+	EXPECT_EQ(res.to_string(), "-4421");
+}
+TEST(ClassLongNumber, can_add_numbers_with_different_sign_positive) {
+	LongNumber ln__4463("-4463");
+	LongNumber ln_6842("6842");
+
+	LongNumber res;
+
+	res = ln__4463 + ln_6842;
+	EXPECT_EQ(res.to_string(), "2379");
+
+}
+TEST(ClassLongNumber, can_add_numbers_with_different_sign_result_zero) {
+	LongNumber ln_6842("6842");
+	LongNumber ln__6842("-6842");
+	LongNumber res;
+
+	res = ln_6842 + ln__6842;
+	EXPECT_EQ(res.to_string(), "0");
+}
+
+TEST(ClassLongNumber, can_mult_with_zero) {
+	LongNumber ln_0;
+	LongNumber ln_125("125");
+	LongNumber res;
+	res = ln_125 * ln_0;
+	EXPECT_EQ(res.to_string(), "0");
+}
+TEST(ClassLongNumber, can_mult_res_positive) {
+	LongNumber ln_125("125");
+	LongNumber ln_35("35");
+
+	LongNumber res;
+
+	res = ln_125 * ln_35;
+	EXPECT_EQ(res.to_string(), "4375");
+}
+TEST(ClassLongNumber, can_mult_res_negative) {
+	LongNumber ln_35("35");
+	LongNumber ln__125("-125");
+
+	LongNumber res;
+
+	res = ln__125 * ln_35;
+	EXPECT_EQ(res.to_string(), "-4375");
+}
+
+TEST(ClassLongNumber, can_increment_with_zero) {
+	LongNumber ln_0;
+
+	ln_0++;
+
+	EXPECT_EQ(ln_0.to_string(), "1");
+
+	EXPECT_EQ((++ln_0).to_string(), "2");
+
+	EXPECT_EQ(ln_0.to_string(), "2");
+	
+
+	EXPECT_EQ((ln_0++).to_string(), "2");
+	
+
+	EXPECT_EQ(ln_0.to_string(), "3");
+	
+}
+TEST(ClassLongNumber, can_increment_negative) {
+	LongNumber ln__9660("-9660");
+	ln__9660++;
+
+	EXPECT_EQ(ln__9660.to_string(), "-9659");
+	EXPECT_EQ((++ln__9660).to_string(), "-9658");
+	EXPECT_EQ(ln__9660.to_string(), "-9658");
+	EXPECT_EQ((ln__9660++).to_string(), "-9658");
+	EXPECT_EQ(ln__9660.to_string(), "-9657");
+}
+TEST(ClassLongNumber, can_increment_positive) {
+	LongNumber ln_99999("99999");
+	ln_99999++;
+
+	EXPECT_EQ(ln_99999.to_string(), "100000");
+	EXPECT_EQ((++ln_99999).to_string(), "100001");
+	EXPECT_EQ(ln_99999.to_string(), "100001");
+	EXPECT_EQ((ln_99999++).to_string(), "100001");
+	EXPECT_EQ(ln_99999.to_string(), "100002");
+}
+
+TEST(ClassLongNumber, can_decrement_with_zero) {
+	LongNumber ln_0;
+	ln_0--;
+
+	EXPECT_EQ(ln_0.to_string(), "-1");
+	EXPECT_EQ((--ln_0).to_string(), "-2");
+	EXPECT_EQ(ln_0.to_string(), "-2");
+	EXPECT_EQ((ln_0--).to_string(), "-2");
+	EXPECT_EQ(ln_0.to_string(), "-3");
+}
+
+TEST(ClassLongNumber, can_decrement_negative) {
+	LongNumber ln__9669("-9669");
+	ln__9669--;
+	
+	EXPECT_EQ(ln__9669.to_string(), "-9670");
+	EXPECT_EQ((--ln__9669).to_string(), "-9671");
+	EXPECT_EQ(ln__9669.to_string(), "-9671");
+	EXPECT_EQ((ln__9669--).to_string(), "-9671");
+	EXPECT_EQ(ln__9669.to_string(), "-9672");
+}
+TEST(ClassLongNumber, can_decrement_positive) {
+	LongNumber ln_10000("10000");
+	ln_10000--;
+
+	EXPECT_EQ(ln_10000.to_string(), "9999");
+	EXPECT_EQ((--ln_10000).to_string(), "9998");
+	EXPECT_EQ(ln_10000.to_string(), "9998");
+	EXPECT_EQ((ln_10000--).to_string(), "9998");
+	EXPECT_EQ(ln_10000.to_string(), "9997");
+}
+#endif

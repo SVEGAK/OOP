@@ -53,5 +53,5 @@ public:
 	long long int get_lnum();
 	int get_len();
 	int get_sign();
-	
+	std::string to_string();
 };
