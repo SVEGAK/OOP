@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "memdata.h"
-
+#include <stdexcept>
 class Vector {
     MemData _mem;         // хранилище данных + размер  + вместимость
     size_t _front;        // индекс первого элемента
@@ -9,9 +9,9 @@ class Vector {
 public:
     Vector(size_t size = 0);                 // конструктор по размеру + по умолчанию
     Vector(std::initializer_list<double>);   // конструктор по списку инициализации
-    Vector(double*, size_t);                 // конструктор инициализации
-    Vector(const Vector&);                   // конструктор копирования
-    Vector(Vector&&);                        // конструктор с move-семантикой
+    Vector(double* list, size_t size);       // конструктор инициализации
+    Vector(const Vector& vector);            // конструктор копирования
+    Vector(Vector&& vector) noexcept;        // конструктор с move-семантикой
     ~Vector() = default;                     // деструктор
 
     inline bool is_empty() const noexcept;          // проверка на пустоту
@@ -21,9 +21,11 @@ public:
     inline size_t capacity() const noexcept;        // геттер вместимости
     inline double front() const;                    // геттер первого элемента
     inline double back() const;                     // геттер последнего элемента
+    inline size_t front_pos() const;                // геттер индекса первого элемента
+    inline size_t back_pos() const;                 // геттер индекса последнего элемента
 
-    inline double& front();                         // сеттер первого элемента
-    inline double& back();                          // сеттер последнего элемента
+    //inline double& front();                       // сеттер первого элемента
+    //inline double& back();                        // сеттер последнего элемента
 
     void push_front(double) noexcept;               // вставка элемента в начало
     void push_back(double) noexcept;                // вставка элемента в конец
@@ -32,13 +34,57 @@ public:
     void pop_back();                                // удаление элемента из конца
     void erase(size_t);                             // удаление элемента по позиции
 
-    Vector& operator=(const Vector&) noexcept;      // оператор присваивания
-    Vector& operator=(Vector&&) noexcept;           // оператор присваивания с move-семантикой
+    Vector& operator=(const Vector& vector) noexcept;      // оператор присваивания
+    Vector& operator=(Vector&& vector) noexcept;           // оператор присваивания с move-семантикой
 
-    double operator[](size_t) const noexcept;       // оператор обращения по индексу константный
-    double& operator[](size_t) noexcept;            // оператор обращения по индексу
+    double operator[](size_t pos) const noexcept;       // оператор обращения по индексу константный
+    double& operator[](size_t pos) noexcept;            // оператор обращения по индексу
 
     friend std::ostream& operator<<(std::ostream&, const Vector&);     // вывод
     friend std::istream& operator>>(std::istream&, Vector&);           // ввод
 };
+
+
+inline bool Vector::is_empty() const noexcept
+{
+    return _mem.is_empty();
+}
+
+inline bool Vector::is_full() const noexcept
+{
+    return _mem.is_full();
+}
+
+inline size_t Vector::size() const noexcept
+{
+    return (*this)._mem.size();
+}
+
+inline size_t Vector::capacity() const noexcept
+{
+    return (*this)._mem.capacity();
+}
+
+inline size_t Vector::front_pos() const
+{
+    return _front;
+}
+
+inline size_t Vector::back_pos() const
+{
+    return _back;
+}
+
+inline double Vector::front() const
+{
+    if (_mem.is_empty()) { throw std::out_of_range("Buffer ring is empty"); }
+    double res = _mem.data()[_front];
+    return res;
+}
+inline double Vector::back() const
+{
+    if (_mem.is_empty()) { throw std::out_of_range("Buffer ring is empty"); }
+    double res = _mem.data()[_back];
+    return res;
+}
 

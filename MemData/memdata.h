@@ -3,7 +3,7 @@
 
 #define MEM_STEP 15
 
-inline int calculate_capacity(int size);
+inline int calculate_capacity(size_t size);
 
 class Vector;
 
@@ -12,11 +12,11 @@ class MemData {
     size_t _size;              // размер заполненной части хранилища
     size_t _capacity;          // вместимость хранилища
 public:
-    MemData(size_t size = 0);                // конструктор по размеру + по умолчанию
+    MemData(size_t size = 0);                     // конструктор по размеру + по умолчанию
     MemData(std::initializer_list<double> list);  // конструктор по списку инициализации
-    MemData(double* data, size_t size);                // конструктор инициализации
-    MemData(const MemData& memdata);                 // конструктор копирования
-    MemData(MemData&& memdata) noexcept;                      // конструктор с move-семантикой
+    MemData(double* data, size_t size);           // конструктор инициализации
+    MemData(const MemData& memdata);              // конструктор копирования
+    MemData(MemData&& memdata) noexcept;          // конструктор с move-семантикой
     ~MemData();                              // деструктор
 
     inline bool is_empty() const noexcept;   // проверка на пустоту
@@ -37,10 +37,12 @@ public:
 };
 inline bool MemData::is_empty() const noexcept
 {
-    if (_size > 0) {
+    if ((_size > 0)&&(_data != nullptr)) {
         return false;
     }
-    return true;
+    else if ((_size == 0) || (_data == nullptr)) {
+        return true;
+    }
 }
 inline bool MemData::is_full() const noexcept
 {
@@ -66,10 +68,10 @@ inline void MemData::clear_memory() noexcept // решил сделать inline, тк функция
     delete[] _data;
     _data = nullptr;
 }
-inline int calculate_capacity(int size)
+inline int calculate_capacity(size_t size)
 {
     if (size == 0) {
         return 0;
     }
-    return size + MEM_STEP;
+    return (size + MEM_STEP);
 }

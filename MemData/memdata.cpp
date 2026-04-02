@@ -3,7 +3,7 @@
 
 MemData::MemData(size_t size) {
 	_size = size;
-	_capacity = calculate_capacity(_size);
+	_capacity = _size;
 	_data = new double[_capacity];
 
 }
@@ -12,7 +12,7 @@ MemData::MemData(std::initializer_list<double> list)
 {
 	
 	_size = list.size();
-	_capacity = calculate_capacity(_size);
+	_capacity = _size;
 	_data = new double[_capacity];
 	const double* list_begin_p = list.begin();
 	for (size_t i = 0; i < _size; i++) {
@@ -22,7 +22,7 @@ MemData::MemData(std::initializer_list<double> list)
 MemData::MemData(double* data, size_t size)
 {
 	_size = size;
-	_capacity = calculate_capacity(_size);
+	_capacity = _size;
 	_data = new double[_capacity];
 	for (size_t i = 0; i < size; i++) {
 		_data[i] = data[i];
@@ -56,7 +56,7 @@ MemData::~MemData()
 void MemData::set_memory(size_t size) noexcept
 {
 	_size = size;
-	_capacity = calculate_capacity(_size);
+	_capacity = _size;
 	delete[] _data;
 	_data = new double[_capacity];
 }
