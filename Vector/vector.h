@@ -27,9 +27,10 @@ public:
     //inline double& front();                       // сеттер первого элемента
     //inline double& back();                        // сеттер последнего элемента
 
-    void push_front(double) noexcept;               // вставка элемента в начало
-    void push_back(double) noexcept;                // вставка элемента в конец
-    void insert(double, size_t);                    // вставка элемента по позиции
+    void push_front(double elem) noexcept;          // вставка элемента в начало
+    void push_back(double elem) noexcept;           // вставка элемента в конец
+    void insert(double elem, size_t pos);           // вставка элемента по позиции
+    void push_when_empty(double elem) noexcept;     //вспомогательная функция для вставки
     void pop_front();                               // удаление элемента из начала
     void pop_back();                                // удаление элемента из конца
     void erase(size_t);                             // удаление элемента по позиции

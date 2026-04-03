@@ -46,7 +46,7 @@ inline bool MemData::is_empty() const noexcept
 }
 inline bool MemData::is_full() const noexcept
 {
-    if (_size == _capacity) {
+    if ((_size == _capacity)&&(_size > 0)) {
         return true;
     }
     return false;

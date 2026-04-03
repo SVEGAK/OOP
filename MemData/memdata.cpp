@@ -10,7 +10,6 @@ MemData::MemData(size_t size) {
 MemData::MemData(std::initializer_list<double> list)
 	
 {
-	
 	_size = list.size();
 	_capacity = _size;
 	_data = new double[_capacity];
@@ -56,7 +55,7 @@ MemData::~MemData()
 void MemData::set_memory(size_t size) noexcept
 {
 	_size = size;
-	_capacity = _size;
+	_capacity = calculate_capacity(_size);
 	delete[] _data;
 	_data = new double[_capacity];
 }
