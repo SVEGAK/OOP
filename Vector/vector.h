@@ -24,16 +24,19 @@ public:
     inline size_t front_pos() const;                // геттер индекса первого элемента
     inline size_t back_pos() const;                 // геттер индекса последнего элемента
 
-    //inline double& front();                       // сеттер первого элемента
-    //inline double& back();                        // сеттер последнего элемента
+    inline double& set_front();                       // сеттер первого элемента
+    inline double& set_back();                        // сеттер последнего элемента
 
     void push_front(double elem) noexcept;          // вставка элемента в начало
     void push_back(double elem) noexcept;           // вставка элемента в конец
     void insert(double elem, size_t pos);           // вставка элемента по позиции
     void push_when_empty(double elem) noexcept;     //вспомогательная функция для вставки
+    void pop_when_empty() noexcept;                 //вспомогательная функция для удаления
+    inline void size_decrease() noexcept;           //вспомогательная функция уменьшения size
+    inline void size_increase() noexcept;           //вспомогательная функция увеличения size
     void pop_front();                               // удаление элемента из начала
     void pop_back();                                // удаление элемента из конца
-    void erase(size_t);                             // удаление элемента по позиции
+    void erase(size_t pos);                         // удаление элемента по позиции
 
     Vector& operator=(const Vector& vector) noexcept;      // оператор присваивания
     Vector& operator=(Vector&& vector) noexcept;           // оператор присваивания с move-семантикой
@@ -88,4 +91,26 @@ inline double Vector::back() const
     double res = _mem.data()[_back];
     return res;
 }
+inline void Vector::size_decrease() noexcept
+{
+    (*this)._mem._size--;
+}
 
+inline void Vector::size_increase() noexcept
+{
+    (*this)._mem._size++;
+}
+inline double& Vector::set_front() {
+    if (is_empty()) {
+        throw std::out_of_range("Vector::front() called on empty vector");
+    }
+    return _mem._data[_front];
+}
+
+inline double& Vector::set_back() {
+    if (is_empty()) {
+        throw std::out_of_range("Vector::back() called on empty vector");
+    }
+    //size_t last_index = (_back - 1 + _mem.capacity()) % _mem.capacity();
+    return _mem._data[_back];
+}

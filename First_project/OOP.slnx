@@ -3,12 +3,14 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Project Path="../BaseFraction/BaseFraction.vcxproj" Id="36ffb0aa-1e1e-469b-851c-673a04c19b6e" />
   <Project Path="../BullsAndCows/BullsAndCows.vcxproj" Id="9616850d-3240-4960-b64d-b5085d14cacf" />
   <Project Path="../Complex/Complex.vcxproj" Id="0dfa92b8-7f5b-4b66-b2d9-729066a0d493" />
   <Project Path="../Date/Date.vcxproj" Id="d57e553d-88b1-4d74-a240-d56d6f4c4c0c" />
   <Project Path="../Fraction/Fraction.vcxproj" Id="2ac88988-9548-4acb-933a-546595fa18e8" />
   <Project Path="../GeometryLib/GeometryLib.vcxproj" Id="13d3484e-0141-408d-8a74-ba7bee21043e" />
   <Project Path="../LongNumbers/LongNumbers.vcxproj" Id="c2f6b4c2-5257-46c9-b59e-ebd7a8aecb30" />
+  <Project Path="../MageArena/MageArena.vcxproj" Id="292533e7-68ae-4899-b9f6-2462884ee247" />
   <Project Path="../MemData/MemData.vcxproj" Id="66ca029b-5372-41f5-b890-f9a7b33fae58" />
   <Project Path="../Monom/Monom.vcxproj" Id="948b038f-6e86-46bb-8604-d62b48e71b63" />
   <Project Path="../STL/STL.vcxproj" Id="81b345cb-67fe-451a-8552-3117140bca40" />

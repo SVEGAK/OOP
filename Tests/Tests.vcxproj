@@ -124,6 +124,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BaseFraction\BaseFraction.vcxproj">
+      <Project>{36ffb0aa-1e1e-469b-851c-673a04c19b6e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\BullsAndCows\BullsAndCows.vcxproj">
       <Project>{9616850d-3240-4960-b64d-b5085d14cacf}</Project>
     </ProjectReference>
@@ -141,6 +144,9 @@
     </ProjectReference>
     <ProjectReference Include="..\LongNumbers\LongNumbers.vcxproj">
       <Project>{c2f6b4c2-5257-46c9-b59e-ebd7a8aecb30}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\MageArena\MageArena.vcxproj">
+      <Project>{292533e7-68ae-4899-b9f6-2462884ee247}</Project>
     </ProjectReference>
     <ProjectReference Include="..\MemData\MemData.vcxproj">
       <Project>{66ca029b-5372-41f5-b890-f9a7b33fae58}</Project>

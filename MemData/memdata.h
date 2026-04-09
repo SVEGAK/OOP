@@ -26,7 +26,7 @@ public:
     inline size_t capacity() const noexcept;             // геттер вместимости
     inline const double* const data() const noexcept;    // геттер хранилища
 
-    void set_memory(size_t size) noexcept;                                         // установка памяти без сохранения данных
+    void set_memory(size_t size) noexcept;                                    // установка памяти без сохранения данных
     void reset_memory(size_t size, size_t start_index = 0) noexcept;          // перевыделение памяти с сохранением данных
     inline void clear_memory() noexcept;                                             // очистка памяти
 
@@ -70,8 +70,5 @@ inline void MemData::clear_memory() noexcept // решил сделать inline, тк функция
 }
 inline int calculate_capacity(size_t size)
 {
-    if (size == 0) {
-        return 0;
-    }
     return (size + MEM_STEP);
 }

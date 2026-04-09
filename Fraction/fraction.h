@@ -1,17 +1,13 @@
 #pragma once
-#include <string>
-#include <stdexcept>
-#include <algorithm>
-#include <cmath>
+//#include <string>
+//#include <stdexcept>
+//#include <algorithm>
+//#include <cmath>
+#include "basefraction.h"
 
-
-class Fraction {
-	int _num; // Числитель
-	int _denom; // Знаменатель
+class Fraction: public BaseFraction{
 	//Служебные функции 
-	Fraction& simplify(); // упрощение дроби
-	static int parseNum(const std::string& str);
-	static int parseDenom(const std::string& str);
+	void simplify() noexcept override; // упрощение дроби
 public:
 	// Конструкторы
 	Fraction(); // контруктор инициализации по умолчанию
