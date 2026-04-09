@@ -51,17 +51,11 @@ RightFraction::RightFraction(int integer, int num, int denom): Fraction(num, den
     simplify();
 }
 
-RightFraction::RightFraction(int integer, int num): RightFraction(integer, num, 1)
-{
-}
+RightFraction::RightFraction(int integer, int num): RightFraction(integer, num, 1){}
 
-RightFraction::RightFraction(int integer): RightFraction(integer, 0, 1)
-{
-}
+RightFraction::RightFraction(int integer): RightFraction(integer, 0, 1){}
 
-RightFraction::RightFraction(const RightFraction& other): Fraction(other), _integer(other._integer)
-{
-}
+RightFraction::RightFraction(const RightFraction& other): Fraction(other), _integer(other._integer){}
 
 RightFraction::RightFraction(const std::string& str): Fraction(), _integer(0)
 {
