@@ -13,6 +13,7 @@
   <Project Path="../MageArena/MageArena.vcxproj" Id="292533e7-68ae-4899-b9f6-2462884ee247" />
   <Project Path="../MemData/MemData.vcxproj" Id="66ca029b-5372-41f5-b890-f9a7b33fae58" />
   <Project Path="../Monom/Monom.vcxproj" Id="948b038f-6e86-46bb-8604-d62b48e71b63" />
+  <Project Path="../RightFraction/RightFraction.vcxproj" Id="4cc35ea9-5a37-41a7-a9bc-15a52cddcf95" />
   <Project Path="../STL/STL.vcxproj" Id="81b345cb-67fe-451a-8552-3117140bca40" />
   <Project Path="../Tests/Tests.vcxproj" Id="a15d942d-9a30-42ae-8ddb-c8a7b3fc4c25" />
   <Project Path="../Time/Time.vcxproj" Id="189aef7c-2945-4f7e-84af-740204b555fd" />

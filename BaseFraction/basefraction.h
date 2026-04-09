@@ -4,7 +4,8 @@
 #include <algorithm>
 #include <cmath>
 class BaseFraction {
-	protected:
+
+protected:
 
 	int _num; // Числитель
 	int _denom; // Знаменатель
@@ -15,7 +16,7 @@ class BaseFraction {
 	static int parseNum(const std::string& str);
 	static int parseDenom(const std::string& str);
 
-	public:
+public:
 	// Конструкторы
 	BaseFraction(); // контруктор инициализации по умолчанию
 	BaseFraction(int, int);//инициализации
@@ -66,4 +67,4 @@ class BaseFraction {
 
 	virtual ~BaseFraction();
 
-}
+};

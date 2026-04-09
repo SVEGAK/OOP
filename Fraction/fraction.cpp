@@ -12,9 +12,13 @@ void Fraction::simplify() noexcept {
 }
 
 Fraction::Fraction() : BaseFraction() {}
+
 Fraction::Fraction(int num, int denom) : BaseFraction(num, denom) {}
+
 Fraction::Fraction(int num): BaseFraction(num){}
 
 Fraction::Fraction(const Fraction& other): BaseFraction(other) {}
 
 Fraction::Fraction(const std::string& str): BaseFraction(str) {}
+
+Fraction::Fraction(const BaseFraction& other): BaseFraction(other){}
