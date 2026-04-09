@@ -23,7 +23,7 @@ class BaseFraction {
 	BaseFraction(const BaseFraction&);// копирования
 	BaseFraction(const std::string& str);//Иницализация через строку
 	//Методы
-	std::string to_string() const;
+	virtual std::string to_string() const;
 	//Операторы
 	//арифметика с присваиванием
 	BaseFraction& operator+=(const BaseFraction& other);

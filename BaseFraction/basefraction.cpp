@@ -60,19 +60,7 @@ int BaseFraction::parseDenom(const std::string& str) {
 	return denom;
 }
 
-void BaseFraction::simplify() noexcept
-{
-	//to_base_fraction();
-	//int md = max_delt(_num, _denom);
-	//if (md > 0) {
-	//	_num /= md;
-	//	_denom /= md;
-	//}
-	//if (_denom < 0) {
-	//	_num *= -1;
-	//	_denom *= -1;
-	//}
-}
+void BaseFraction::simplify() noexcept {}
 
 void BaseFraction::to_base_fraction() noexcept
 {
