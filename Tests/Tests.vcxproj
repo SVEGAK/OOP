@@ -57,7 +57,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>F:\C unn\Vector;F:\C unn\MemData;F:\C unn\LongNumbers;F:\C unn\Monom;F:\C unn\Fraction;F:\C unn\Date;F:\C unn\Complex;F:\C unn\Time;F:\C unn\BullsAndCows;F:\C unn\GeometryLib;F:\C unn\STL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\C unn\RightFraction;F:\C unn\Vector;F:\C unn\MemData;F:\C unn\LongNumbers;F:\C unn\Monom;F:\C unn\Fraction;F:\C unn\Date;F:\C unn\Complex;F:\C unn\Time;F:\C unn\BullsAndCows;F:\C unn\GeometryLib;F:\C unn\STL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -116,6 +116,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\C unn\Complex;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="test_fraction.cpp" />
+    <ClCompile Include="test_right_fraction.cpp" />
     <ClCompile Include="test_stl.cpp" />
     <ClCompile Include="test_time.cpp" />
     <ClCompile Include="test_vector.cpp" />
@@ -153,6 +154,9 @@
     </ProjectReference>
     <ProjectReference Include="..\Monom\Monom.vcxproj">
       <Project>{948b038f-6e86-46bb-8604-d62b48e71b63}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\RightFraction\RightFraction.vcxproj">
+      <Project>{4cc35ea9-5a37-41a7-a9bc-15a52cddcf95}</Project>
     </ProjectReference>
     <ProjectReference Include="..\STL\STL.vcxproj">
       <Project>{81b345cb-67fe-451a-8552-3117140bca40}</Project>

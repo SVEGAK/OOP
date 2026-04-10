@@ -62,9 +62,12 @@ public:
 	bool operator>=(int num) const;
 	bool operator<=(int num) const;
 	//Геттеры
-	int num() { return _num; };
-	int denom() { return _denom; };
+	int num() const{ return _num; };
+	int denom() const{ return _denom; };
 
 	virtual ~BaseFraction();
+
+	friend std::ostream& operator<<(std::ostream&, const BaseFraction&);
+	friend std::istream& operator>>(std::istream& in, BaseFraction& frac);
 
 };

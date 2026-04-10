@@ -13,4 +13,7 @@ class Fraction: public BaseFraction{
 	Fraction(const Fraction&);// копирования
 	Fraction(const std::string& str);//Иницализация через строку
 	Fraction(const BaseFraction&);//Конструктор преобразования типа
+	//Оператор присваивания с преобразованием
+	Fraction& operator=(const BaseFraction&) noexcept;
+	
 };

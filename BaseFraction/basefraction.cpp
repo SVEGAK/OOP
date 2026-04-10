@@ -230,7 +230,6 @@ BaseFraction& BaseFraction::operator=(int num) {
 }
 
 //Операторы сравнения
-
 bool BaseFraction::operator==(const BaseFraction& other) const {
 	BaseFraction that(*this);
 	BaseFraction Other(other);

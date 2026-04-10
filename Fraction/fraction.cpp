@@ -22,3 +22,10 @@ Fraction::Fraction(const Fraction& other): BaseFraction(other) {}
 Fraction::Fraction(const std::string& str): BaseFraction(str) {}
 
 Fraction::Fraction(const BaseFraction& other): BaseFraction(other){}
+
+Fraction& Fraction::operator=(const BaseFraction& other) noexcept
+{
+	(*this)._num = other.num();
+	(*this)._denom = other.denom();
+	return (*this);
+}
