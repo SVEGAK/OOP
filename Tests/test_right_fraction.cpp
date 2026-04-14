@@ -75,9 +75,6 @@ TEST(RightFractionTest, ConstructorFromStringMixed) {
 
 TEST(RightFractionTest, ConstructorFromStringMixedNoSpace) {
     EXPECT_THROW(RightFraction("2 3/4"), std::invalid_argument);
-    // Wait: in our code find_Integer_pos expects space before and after '/'
-    // Actually the format required is "Integer num/denom", so "2 3/4" is correct.
-    // But "23/4" without space would be parsed as fraction only.
 }
 
 TEST(RightFractionTest, ConstructorFromStringInvalidFormat) {

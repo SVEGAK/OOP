@@ -1,4 +1,5 @@
 #include "basefraction.h"
+
 int BaseFraction::max_delt(int a, int b) {
 	int delt = 1;
 	a = abs(a);
@@ -60,7 +61,9 @@ int BaseFraction::parseDenom(const std::string& str) {
 	return denom;
 }
 
-void BaseFraction::simplify() noexcept {}
+void BaseFraction::simplify() noexcept {//Вызывается для класса Fraction для некоторых операторов сравнения 
+	//std::cout << "basefraction method\n";//Вместо simplify() из Fraction, но это не оказывает вляния на результаты
+}
 
 void BaseFraction::to_base_fraction() noexcept
 {

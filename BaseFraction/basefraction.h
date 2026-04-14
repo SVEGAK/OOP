@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
+
 class BaseFraction {
 
 protected:
@@ -11,7 +13,7 @@ protected:
 	int _denom; // Знаменатель
 	//Служебные функции 
 	int max_delt(int a, int b);//вспомогательная функция для simplify
-	virtual void simplify() noexcept; // упрощение дроби
+	virtual void simplify() noexcept;// упрощение дроби
 	virtual void to_base_fraction() noexcept;
 	static int parseNum(const std::string& str);
 	static int parseDenom(const std::string& str);

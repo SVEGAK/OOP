@@ -29,3 +29,83 @@ Fraction& Fraction::operator=(const BaseFraction& other) noexcept
 	(*this)._denom = other.denom();
 	return (*this);
 }
+
+
+// Арифметические операторы (создают Fraction res, а не BaseFraction)
+Fraction Fraction::operator+(int num) const {
+    Fraction res(*this);
+    res += num;
+    return res;
+}
+Fraction Fraction::operator+(const BaseFraction& other) const {
+    Fraction res(*this);
+    res += other;
+    return res;
+}
+Fraction Fraction::operator-(int num) const {
+    Fraction res(*this);
+    res -= num;
+    return res;
+}
+Fraction Fraction::operator-(const BaseFraction& other) const {
+    Fraction res(*this);
+    res -= other;
+    return res;
+}
+Fraction Fraction::operator*(int num) const {
+    Fraction res(*this);
+    res *= num;
+    return res;
+}
+Fraction Fraction::operator*(const BaseFraction& other) const {
+    Fraction res(*this);
+    res *= other;
+    return res;
+}
+Fraction Fraction::operator/(int num) const {
+    Fraction res(*this);
+    res /= num;
+    return res;
+}
+Fraction Fraction::operator/(const BaseFraction& other) const {
+    Fraction res(*this);
+    res /= other;
+    return res;
+}
+
+// Операторы сравнения (локальные переменные типа Fraction)
+bool Fraction::operator==(const BaseFraction& other) const {
+    Fraction that(*this);
+    Fraction Other(other);
+    that.simplify();
+    Other.simplify();
+    return ((that._num == Other._num) && (that._denom == Other._denom));
+}
+
+bool Fraction::operator!=(const BaseFraction& other) const {
+    return !((*this) == other);
+}
+
+bool Fraction::operator>(const BaseFraction& other) const {
+    Fraction that(*this);
+    Fraction Other(other);
+    that.simplify();
+    Other.simplify();
+    Other._denom *= that._denom;
+    Other._num *= that._denom;
+    that._denom *= other.denom();
+    that._num *= other.denom();
+    return (that._num > Other._num);
+}
+
+bool Fraction::operator<(const BaseFraction& other) const {
+    return (other > (*this));
+}
+
+bool Fraction::operator>=(const BaseFraction& other) const {
+    return (((*this) > other) || ((*this) == other));
+}
+
+bool Fraction::operator<=(const BaseFraction& other) const {
+    return (((*this) < other) || ((*this) == other));
+}

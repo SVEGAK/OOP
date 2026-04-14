@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "fraction.cpp"
 #include "fraction.h"
 //КОНСТРУКТОРЫ
 TEST(ClassFraction, check_default_constructor) {
