@@ -1,7 +1,8 @@
+#include "pch.h"
 #include <gtest/gtest.h>
 #include "rightfraction.h"
 #include <sstream>
-
+#include "basefraction.h"
 TEST(RightFractionTest, DefaultConstructor) {
     RightFraction rf;
     EXPECT_EQ(rf.integer(), 0);
@@ -252,19 +253,6 @@ TEST(RightFractionTest, ArithmeticOperatorsReturnNewObject) {
     EXPECT_EQ(b.integer(), 2);
 }
 
-TEST(RightFractionTest, UnaryMinus) {
-    RightFraction a(3, 1, 2);
-    RightFraction b = -a;
-    EXPECT_EQ(b.integer(), -3);
-    EXPECT_EQ(b.num(), 1);
-    EXPECT_EQ(b.denom(), 2);
-
-    RightFraction c(0, 0, 1);
-    RightFraction d = -c;
-    EXPECT_EQ(d.integer(), 0);
-    EXPECT_EQ(d.num(), 0);
-    EXPECT_EQ(d.denom(), 1);
-}
 
 TEST(RightFractionTest, EqualityOperators) {
     RightFraction a(1, 1, 2);

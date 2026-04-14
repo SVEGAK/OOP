@@ -11,8 +11,8 @@ public:
 	inline int health() const noexcept;
 	inline int power() const noexcept;
 
-	virtual void attack(Character);
-	virtual void attaked(Character);
+	//virtual void attack(Character);
+	//virtual void attaked(Character);
 };
 
 inline int Character::health() const noexcept {
@@ -27,5 +27,6 @@ inline int Character::power() const noexcept {
 class Warrior : public Character {
 	int _armor;
 public:
-	void attack(Character);
+
+	//void attack(Character);
 };

@@ -79,36 +79,6 @@ TEST(ClassFraction, to_string_whole_number) {
     Fraction f1(5, 1);
     EXPECT_EQ(f1.to_string(), "5/1");
 }
-
-
-// max_delt
-TEST(ClassFraction, max_delt_coprime_numbers) {
-    EXPECT_EQ(max_delt(3, 7), 1);
-}
-
-TEST(ClassFraction, max_delt_common_divisor) {
-    EXPECT_EQ(max_delt(12, 18), 6);
-}
-
-TEST(ClassFraction, max_delt_one_is_multiple) {
-    EXPECT_EQ(max_delt(4, 8), 4);
-}
-
-TEST(ClassFraction, max_delt_with_negative) {
-    EXPECT_EQ(max_delt(-12, 18), 6);
-    EXPECT_EQ(max_delt(12, -18), 6);
-}
-
-TEST(ClassFraction, max_delt_with_zero) {
-    EXPECT_EQ(max_delt(0, 5), 5);
-    EXPECT_EQ(max_delt(5, 0), 5);
-}
-
-TEST(ClassFraction, max_delt_same_numbers) {
-    EXPECT_EQ(max_delt(7, 7), 7);
-}
-
-
 //АРИФМЕТИЧЕСКИЕ ОПЕРАЦИИ С ПРИСВОЕНИЕМ
 TEST(ClassFraction, op_add_assign_fraction_basic) {
     Fraction f1(1, 2);

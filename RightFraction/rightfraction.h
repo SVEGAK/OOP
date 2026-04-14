@@ -1,6 +1,6 @@
 #pragma once
 #include "fraction.h"
-class RightFraction : protected Fraction {
+class RightFraction : public Fraction {
 	int _integer;
 	size_t find_Integer_pos(const std::string& input_str);
 	int parseInteger(const std::string& input_str, size_t pos);
