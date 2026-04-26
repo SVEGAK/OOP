@@ -70,7 +70,7 @@ void BaseFraction::to_base_fraction() noexcept
 	// в BaseFraction - пуст.
 }
 
-BaseFraction::BaseFraction(): _num(1), _denom(1){}
+BaseFraction::BaseFraction(): _num(0), _denom(1){}
 BaseFraction::BaseFraction(int num, int denom): _num(num),_denom(denom)
 {
 	if (denom == 0) { throw std::invalid_argument("Division by zero."); }

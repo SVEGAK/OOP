@@ -3,7 +3,7 @@
 //КОНСТРУКТОРЫ
 TEST(ClassFraction, check_default_constructor) {
 	Fraction f1;
-	EXPECT_EQ(f1.num(), 1);
+	EXPECT_EQ(f1.num(), 0);
 	EXPECT_EQ(f1.denom(), 1);
 };
 TEST(ClassFraction, check_init_constructor) {
