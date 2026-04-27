@@ -6,6 +6,7 @@ class Vector {
     MemData _mem;         // хранилище данных + размер  + вместимость
     size_t _front;        // индекс первого элемента
     size_t _back;         // индекс последнего элемента
+    void make_buffer();
 public:
     Vector(size_t size = 0);                 // конструктор по размеру + по умолчанию
     Vector(std::initializer_list<double>);   // конструктор по списку инициализации
@@ -37,7 +38,7 @@ public:
     void pop_front();                               // удаление элемента из начала
     void pop_back();                                // удаление элемента из конца
     void erase(size_t pos);                         // удаление элемента по позиции
-
+    
     Vector& operator=(const Vector& vector) noexcept;      // оператор присваивания
     Vector& operator=(Vector&& vector) noexcept;           // оператор присваивания с move-семантикой
 
@@ -56,7 +57,8 @@ inline bool Vector::is_empty() const noexcept
 
 inline bool Vector::is_full() const noexcept
 {
-    return _mem.is_full();
+    if ((_back == (_mem._capacity - 1)) || (_mem.is_full())||(_front == 0)) { return true; }
+    return false;
 }
 
 inline size_t Vector::size() const noexcept

@@ -2,32 +2,33 @@
 #include <initializer_list>
 
 #define MEM_STEP 15
-
-inline int calculate_capacity(size_t size);
-
+#define FRONT_BUFFER 5
+typedef double value_type;
 class Vector;
 
 class MemData {
-    double* _data;             // хранилище данных
+    value_type* _data;             // хранилище данных
     size_t _size;              // размер заполненной части хранилища
     size_t _capacity;          // вместимость хранилища
+    
 public:
     MemData(size_t size = 0);                     // конструктор по размеру + по умолчанию
-    MemData(std::initializer_list<double> list);  // конструктор по списку инициализации
-    MemData(double* data, size_t size);           // конструктор инициализации
+    MemData(std::initializer_list<value_type> list);  // конструктор по списку инициализации
+    MemData(value_type* data, size_t size);           // конструктор инициализации
     MemData(const MemData& memdata);              // конструктор копирования
     MemData(MemData&& memdata) noexcept;          // конструктор с move-семантикой
     ~MemData();                              // деструктор
 
     inline bool is_empty() const noexcept;   // проверка на пустоту
     inline bool is_full() const noexcept;    // проверка на переполнение
+    inline int calculate_capacity(size_t size);
 
     inline size_t size() const noexcept;                 // геттер размера
     inline size_t capacity() const noexcept;             // геттер вместимости
-    inline const double* const data() const noexcept;    // геттер хранилища
+    inline const value_type* const data() const noexcept;    // геттер хранилища
 
     void set_memory(size_t size) noexcept;                                    // установка памяти без сохранения данных
-    void reset_memory(size_t size, size_t start_index = 0) noexcept;          // перевыделение памяти с сохранением данных
+    void reset_memory(size_t size, size_t start_index = 0, size_t placement_offset = 0) noexcept;          // перевыделение памяти с сохранением данных
     inline void clear_memory() noexcept;                                             // очистка памяти
 
     MemData& operator=(const MemData& other) noexcept;         // оператор присваивания
@@ -59,7 +60,7 @@ inline size_t MemData::capacity() const noexcept
 {
     return _capacity;
 }
-inline const double* const MemData::data() const noexcept
+inline const value_type* const MemData::data() const noexcept
 {
     return _data;
 }
@@ -68,7 +69,10 @@ inline void MemData::clear_memory() noexcept // решил сделать inline, тк функция
     delete[] _data;
     _data = nullptr;
 }
-inline int calculate_capacity(size_t size)
+inline int MemData::calculate_capacity(size_t size)
 {
+    if (size <= _size) {
+        return size;
+    }
     return (size + MEM_STEP);
 }

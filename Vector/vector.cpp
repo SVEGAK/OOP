@@ -2,6 +2,7 @@
 #include "memdata.h"
 #include <string>
 #include <iostream>
+
 Vector::Vector(size_t size) {//конструктор по умолчанию+размеру
 	MemData object(size);
 	_front = 0;
@@ -76,10 +77,10 @@ void Vector::push_back(double elem) noexcept {
 	}
 	
 	if ((*this).is_full()) {
-		_front = 5;
-		(*this)._mem.reset_memory((*this).size()+1,_front); //увеличиваем на 1 ячейку size + выделяем буфер
-		_back++;
-		(*this)._mem._data[_back] = elem;
+		(*this)._mem.reset_memory((*this).size()+1,_front,FRONT_BUFFER); // выделяем буфер
+		_front = FRONT_BUFFER;
+		_back = _front + (*this).size() - 1; //пересчитываю back
+		(*this)._mem._data[_back] = elem;// ставлю элемент в нововыделенную ячейку
 		return;
 	}
 	_back++;
@@ -97,13 +98,13 @@ void Vector::insert(double elem, size_t pos)
 		return;
 	}
 	if ((*this).is_full()) { 
-		_front = 5;
-		(*this)._mem.reset_memory((*this).size()+1, _front); //увеличиваем на MEM_STEP size + выделяем буфер MEMSTEP
-		_back = (*this).size()+_front;
+		(*this)._mem.reset_memory((*this).size()+1,_front, FRONT_BUFFER); //увеличиваем на MEM_STEP size + выделяем буфер MEMSTEP
+		_front = FRONT_BUFFER;
+		_back = (*this).size()+_front-1;
 		double old_subj = elem;
 		double temp = 0;
-		size_t i = static_cast<size_t>(pos+_front);
-		if (pos > ((*this).capacity() / 2)) {
+		size_t i = static_cast<size_t>( pos + _front );
+		if (pos > ((*this).capacity() / 2)) {//cap = 19
 			for (i; i < _back; i++) {
 				temp = (*this)._mem._data[i];
 				(*this)._mem._data[i] = old_subj;
@@ -128,8 +129,8 @@ void Vector::push_front(double elem) noexcept
 		return;
 	}
 	if (((*this).is_full())||(_front == _back)) {
-		_front = 5;
-		(*this)._mem.reset_memory((*this)._mem.size() + 1,_front); //увеличиваем на 1 ячейку size + выделяем буфер
+		(*this)._mem.reset_memory((*this)._mem.size() + 1,_front,FRONT_BUFFER); //увеличиваем на 1 ячейку size + выделяем буфер
+		_front = FRONT_BUFFER-1;//берем элемент перед тем который уже стоит первым 
 		(*this)._mem._data[_front] = elem;
 		return;
 	}
@@ -140,9 +141,9 @@ void Vector::push_front(double elem) noexcept
 }
 void Vector::push_when_empty(double elem) noexcept 
 {
-	_front = 5;
+	_front = FRONT_BUFFER;
 	if ((*this).capacity() < _front+1) {
-		(*this)._mem.set_memory(_front);
+		(*this)._mem.set_memory(_front); //передается size = 5
 	}
 	_back = _front;
 	(*this)._mem._data[_front] = elem;
