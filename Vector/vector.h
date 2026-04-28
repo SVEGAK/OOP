@@ -6,7 +6,6 @@ class Vector {
     MemData _mem;         // хранилище данных + размер  + вместимость
     size_t _front;        // индекс первого элемента
     size_t _back;         // индекс последнего элемента
-    void make_buffer();
 public:
     Vector(size_t size = 0);                 // конструктор по размеру + по умолчанию
     Vector(std::initializer_list<double>);   // конструктор по списку инициализации

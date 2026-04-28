@@ -88,39 +88,83 @@ void Vector::push_back(double elem) noexcept {
 	(*this).size_increase();
 	return;
 }
+//void Vector::insert(double elem, size_t pos)
+//{
+//	if ((pos > _back) || (pos < _front)) {
+//		throw std::out_of_range("Insert position must be in [" + std::to_string(_front) + ';' +	std::to_string(_back) + "].");
+//	}
+//	if ((is_empty())|| (size() == 0)) {//учитываем если буфер пуст( в том числе nullptr)
+//		push_when_empty(elem);
+//		return;
+//	}
+//	if (is_full()) { 
+//		_mem.reset_memory(size()+1,_front, FRONT_BUFFER); //увеличиваем на MEM_STEP size + выделяем буфер MEMSTEP
+//		_front = FRONT_BUFFER;
+//		_back = size()+_front-1;
+//		double old_subj = elem;
+//		double temp = 0;
+//		size_t i = static_cast<size_t>( pos + _front );
+//		if (pos > (capacity() / 2)) {//cap = 19
+//			for (i; i < _back; i++) {
+//				temp = _mem._data[i];
+//				(*this)._mem._data[i] = old_subj;
+//				old_subj = temp;
+//			}
+//			
+//		}else {
+//			for (i; i > _front-2; i--) {
+//				temp = _mem._data[i];
+//				_mem._data[i] = old_subj;
+//				old_subj = temp;
+//			}
+//			
+//		}
+//		return;
+//	}
+//}
 void Vector::insert(double elem, size_t pos)
 {
-	if ((pos > _back) || (pos < _front)) {
-		throw std::out_of_range("Insert position must be in [" + std::to_string(_front) + ';' +	std::to_string(_back) + "].");
+	// FIX 1: pos — это логическая позиция [0, size()], а не физический индекс
+	if (pos > size()) {
+		throw std::out_of_range("Insert position must be in [0;" + std::to_string(size()) + "].");
 	}
-	if (((*this).is_empty())|| ((*this).size() == 0)) {//учитываем если буфер пуст( в том числе nullptr)
+
+	if (is_empty() || size() == 0) {
 		push_when_empty(elem);
 		return;
 	}
-	if ((*this).is_full()) { 
-		(*this)._mem.reset_memory((*this).size()+1,_front, FRONT_BUFFER); //увеличиваем на MEM_STEP size + выделяем буфер MEMSTEP
+
+	if (is_full()) {
+		_mem.reset_memory(size() + 1, _front, FRONT_BUFFER);
 		_front = FRONT_BUFFER;
-		_back = (*this).size()+_front-1;
-		double old_subj = elem;
-		double temp = 0;
-		size_t i = static_cast<size_t>( pos + _front );
-		if (pos > ((*this).capacity() / 2)) {//cap = 19
-			for (i; i < _back; i++) {
-				temp = (*this)._mem._data[i];
-				(*this)._mem._data[i] = old_subj;
-				old_subj = temp;
-			}
-			
-		}else {
-			for (i; i > _front-2; i--) {
-				temp = (*this)._mem._data[i];
-				(*this)._mem._data[i] = old_subj;
-				old_subj = temp;
-			}
-			
-		}
-		return;
+		_back = _front + size() - 1;
 	}
+
+	size_t phys_pos = pos + _front;
+
+	// FIX 2: Используем size()/2 для выбора направления, а не capacity()/2
+	if (pos > size() / 2) {
+		// Сдвиг вправо: перемещаем хвост [phys_pos, _back] на одну позицию вправо
+		// Начинаем с конца, чтобы не затереть данные
+		for (size_t i = _back + 1; i > phys_pos; --i) {
+			_mem._data[i] = _mem._data[i - 1];
+		}
+		_mem._data[phys_pos] = elem;
+		++_back;
+	}
+	else {
+		// FIX 3: Оригинальная логика "сдвига влево" была ошибочной.
+		// Для вставки в любом случае нужно освободить место на позиции phys_pos.
+		// Единственный корректный способ — сдвиг хвоста вправо.
+		// Ветвь оставлена для сохранения структуры, но выполняет ту же операцию.
+		for (size_t i = _back + 1; i > phys_pos; --i) {
+			_mem._data[i] = _mem._data[i - 1];
+		}
+		_mem._data[phys_pos] = elem;
+		++_back;
+	}
+
+	return;
 }
 void Vector::push_front(double elem) noexcept
 {

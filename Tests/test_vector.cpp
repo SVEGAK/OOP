@@ -410,9 +410,6 @@ TEST(ClassVector, can_push_back_in_empty_vector) {
 TEST(ClassVector, can_insert) {
     Vector v1 = { 1.0, 3.4, 1.1 };
     v1.insert(2.5,2);
-    for (size_t i = 0; i < v1.size(); i++) {
-        EXPECT_EQ(v1[i + v1.front_pos()], 0);
-    }
     EXPECT_EQ(v1.capacity(), 4+MEM_STEP+FRONT_BUFFER);
     EXPECT_EQ(v1.size(), 4);
 }
