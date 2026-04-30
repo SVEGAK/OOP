@@ -335,25 +335,25 @@ TEST(ClassVector, throw_when_try_set_back_in_empty_vector) {
     EXPECT_THROW(v.set_back() = 1.0, std::out_of_range);
 }
 
-//TEST(ClassVector, can_output_with_operator_cout) {
-//    Vector vec({ 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-//    std::stringstream out;
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 4, 5, 6, 7, 8, 9 }", out.str());
-//}
+TEST(ClassVector, can_output_with_operator_cout) {
+    Vector vec({ 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+    std::stringstream out;
+    out << vec;
+    EXPECT_EQ("{1, 2, 3, 4, 5, 6, 7, 8, 9}", out.str());
+}
 
-//TEST(ClassVector, can_input_with_operator_cin) {
-//    Vector vec({ 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-//    std::stringstream in("9 1 2 3 4 5 6 7 8 9");
-//    in >> vec;
-//
-//    EXPECT_EQ(9, vec.size());
-//    EXPECT_EQ(15, vec.capacity());
-//
-//    for (size_t i = 0; i < vec.size(); i++) {
-//        EXPECT_DOUBLE_EQ(vec[i], i + 1);
-//    }
-//}
+TEST(ClassVector, can_input_with_operator_cin) {
+    Vector vec({ 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+    std::stringstream in("9 1 2 3 4 5 6 7 8 9");
+    in >> vec;
+
+    EXPECT_EQ(9, vec.size());
+    EXPECT_EQ(15, vec.capacity());
+
+    for (size_t i = 0; i < vec.size(); i++) {
+        EXPECT_DOUBLE_EQ(vec[i], i + 1);
+    }
+}
 
 TEST(ClassVector, can_push_front) {
     Vector v1 = { 1.0, 3.4, 1.1 };
@@ -676,73 +676,6 @@ TEST(ClassVector, throw_when_try_erase_with_wrong_position) {
     EXPECT_THROW(v.erase(3), std::out_of_range);
     EXPECT_THROW(v.erase(100), std::out_of_range);
 }
-
-//TEST(ClassVector, combination_push_pop_insert_erase) {
-//    Vector vec({ 3, 44, 5, 7, 8 });
-//
-//    std::stringstream out;
-//    out << vec;
-//    EXPECT_EQ("{ 3, 44, 5, 7, 8 }", out.str());
-//    out.str("");
-//
-//    vec.pop_front();
-//    out << vec;
-//    EXPECT_EQ("{ 44, 5, 7, 8 }", out.str());
-//    out.str("");
-//
-//    for (size_t i = 0; i < 4; i++) {
-//        vec.push_front(3 - i);
-//    }
-//    out << vec;
-//    EXPECT_EQ("{ 0, 1, 2, 3, 44, 5, 7, 8 }", out.str());
-//    out.str("");
-//
-//    vec.pop_back();
-//    out << vec;
-//    EXPECT_EQ("{ 0, 1, 2, 3, 44, 5, 7 }", out.str());
-//    out.str("");
-//
-//    for (size_t i = 0; i < 4; i++) {
-//        vec.push_back(8 + i);
-//    }
-//    out << vec;
-//    EXPECT_EQ("{ 0, 1, 2, 3, 44, 5, 7, 8, 9, 10, 11 }", out.str());
-//    out.str("");
-//
-//    vec.erase(0);
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 44, 5, 7, 8, 9, 10, 11 }", out.str());
-//    out.str("");
-//
-//    vec.erase(3);
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 5, 7, 8, 9, 10, 11 }", out.str());
-//    out.str("");
-//
-//    vec.insert(6, 4);
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 5, 6, 7, 8, 9, 10, 11 }", out.str());
-//    out.str("");
-//
-//    for (size_t i = 0; i < 5; i++) {
-//        vec.push_back(12 + i);
-//    }
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }", out.str());
-//    out.str("");
-//
-//    vec.insert(4, 3);
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }", out.str());
-//    out.str("");
-//
-//    EXPECT_EQ(16, vec.size());
-//    EXPECT_EQ(30, vec.capacity());
-//
-//    for (size_t i = 0; i < vec.size(); i++) {
-//        EXPECT_DOUBLE_EQ(vec[i], i + 1);
-//    }
-//}
 
 TEST(ClassVector, can_assigment) {
     Vector v1 = { 1.0, 2.0, 3.0 };

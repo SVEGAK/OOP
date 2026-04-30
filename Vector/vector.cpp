@@ -190,25 +190,18 @@ void Vector::erase(size_t pos)
 }
 
 std::ostream& operator<<(std::ostream& os, const Vector& v) {
-	size_t front = v.front_pos();
-	size_t back = front + v.size()-1;
-	os << "[";
-	for (size_t i = front; i < back+1; i++) {
-		if (i > front) os << ", ";
+	os << "{";
+	for (size_t i = 0; i < v.size(); i++) {
+		if (i > 0) os << ", ";
 		os << v[i];
 	}
-	os << "]";
+	os << "}";
 	return os;
 }
-
 std::istream& operator>>(std::istream& is, Vector& v) {
 	double value;
 	char ch;
-
-	// пропускаем открывающую скобку
-	if (is.peek() == '[') is.get(ch);
-
-	// читаем числа через запятую или пробел
+	if (is.peek() == '{') is.get(ch);
 	while (is >> value) { //значение из потока считывается, то условие возвр true
 		v.push_back(value);
 
@@ -216,17 +209,14 @@ std::istream& operator>>(std::istream& is, Vector& v) {
 			is.get(ch);
 		}
 
-		// Если закрывающая скобка — конец
 		if (is.peek() == ']') {
 			is.get(ch);
 			break;
 		}
 	}
 
-	// если ошибка ввода не из-за конца формата
 	if (is.eof() || is.peek() == ']') {
 		is.clear(is.rdstate() & ~std::ios::eofbit);
 	}
-
 	return is;
 }
