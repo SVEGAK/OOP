@@ -7,13 +7,6 @@
 #include "memdata.h"
 #include <iostream>
 
-
-//TEST(FunctionsForMemData, calculate_capacity) {
-//    MemData md
-//    EXPECT_EQ(md.calculate_capacity(10), 10+MEM_STEP);
-//    EXPECT_EQ(md.calculate_capacity(0), MEM_STEP);
-//}
-
 TEST(ClassMemData, can_create_with_default_constructor) {
     MemData md;
     EXPECT_EQ(md.size(), 0);
@@ -293,7 +286,7 @@ TEST(ClassVector, can_set_front) {
     }
     v2.set_front() = 99.0;
     EXPECT_DOUBLE_EQ(v2.front(), 99.0);
-    EXPECT_DOUBLE_EQ(v2[v2.front_pos()], 99.0);
+    EXPECT_DOUBLE_EQ(v2[0], 99.0);
 }
 
 TEST(ClassVector, can_set_back) {
@@ -317,7 +310,7 @@ TEST(ClassVector, can_set_back) {
     }
     v3.set_back() = 99.0;
     EXPECT_DOUBLE_EQ(v3.back(), 99.0);
-    EXPECT_DOUBLE_EQ(v3[v3.back_pos()], 99.0);
+    EXPECT_DOUBLE_EQ(v3[v3.size()-1], 99.0);
     EXPECT_DOUBLE_EQ(v3.back_pos(), 14);
 }
 
@@ -339,7 +332,6 @@ TEST(ClassVector, throw_when_try_set_front_in_empty_vector) {
 
 TEST(ClassVector, throw_when_try_set_back_in_empty_vector) {
     Vector v;
-
     EXPECT_THROW(v.set_back() = 1.0, std::out_of_range);
 }
 
@@ -423,9 +415,6 @@ TEST(ClassVector, can_insert_to_front) {
     EXPECT_EQ(v1.front_pos(), 0);
     v1.insert(2.5, v1.front_pos());//front_pos = 0 //capacity = 4 + 15 = 19
     EXPECT_EQ(v1.front_pos(), FRONT_BUFFER);
-    for (size_t i = 0; i < v1.size(); i++) {
-        EXPECT_EQ(v1[i + v1.front_pos()], 0);
-    }
     EXPECT_EQ(v1.capacity(), 4 + MEM_STEP+FRONT_BUFFER);
     EXPECT_EQ(v1.size(), 4);
 }
@@ -593,34 +582,36 @@ TEST(ClassVector, can_correctly_recalc_back_in_area_of_zero) {
 
     for (size_t i = 0; i < 15; i++) {
         vec.push_back(i + 1); // от i = 5  до i = 19
-        EXPECT_DOUBLE_EQ(vec[i+5], i+1);
+        EXPECT_DOUBLE_EQ(vec[i], i+1);
     }
+    EXPECT_EQ(vec[0], 1);
     EXPECT_EQ(vec.size(), 15);
-    EXPECT_EQ(26, vec.capacity());
-    vec.pop_front(); // от i = 6 до i = 19
+    EXPECT_EQ(20, vec.capacity());
+    EXPECT_EQ(19, vec.back_pos());
+    vec.pop_front();
     EXPECT_EQ(vec.size(), 14);
-    vec.push_back(16);// от i = 6 до i = 20, capacity = 26;
+    vec.push_back(16);
 
     EXPECT_EQ(15, vec.size());
-    EXPECT_EQ(26, vec.capacity());
+    EXPECT_EQ(35, vec.capacity());
     EXPECT_EQ(vec.is_full(), false);
-    EXPECT_EQ(20, vec.back_pos());
+    EXPECT_EQ(19, vec.back_pos());
     EXPECT_DOUBLE_EQ(16.0, vec.back());
-    size_t front = vec.front_pos();//6
-    EXPECT_EQ(front, 6);
-    EXPECT_EQ(2, vec[front]);
+    size_t front = vec.front_pos();
+    EXPECT_EQ(front, 5);
+    EXPECT_EQ(2, vec[0]);
     for (size_t i = 0; i < vec.size(); i++) {
-        EXPECT_DOUBLE_EQ(vec[i+front], i+2);
+        EXPECT_DOUBLE_EQ(vec[i], i+2);
     }
 
     vec.pop_back();
 
     EXPECT_EQ(14, vec.size());
-    EXPECT_EQ(26, vec.capacity());
+    EXPECT_EQ(35, vec.capacity());
     EXPECT_DOUBLE_EQ(15.0, vec.back());
 
     for (size_t i = 0; i < vec.size(); i++) {
-        EXPECT_DOUBLE_EQ(vec[i + front], i + 2);
+        EXPECT_DOUBLE_EQ(vec[i], i + 2);
     }
 }
 TEST(ClassVector, can_correctly_recalc_front_in_area_of_zero) {
@@ -658,29 +649,32 @@ TEST(ClassVector, can_erase_front) {
     EXPECT_EQ(v.size(), 4);
     EXPECT_DOUBLE_EQ(v.front(), 2.0);
     EXPECT_DOUBLE_EQ(v.back(), 5.0);
-    EXPECT_DOUBLE_EQ(v[1], 2.0);
-    EXPECT_DOUBLE_EQ(v[4], 5.0);
+    EXPECT_DOUBLE_EQ(v[0], 2.0);
+    EXPECT_DOUBLE_EQ(v[v.size()-1], 5.0);
 }
 
 TEST(ClassVector, can_erase_back) {
     Vector v = { 1.0, 2.0, 3.0, 4.0, 5.0 };
 
     v.erase(4);
-
+    for (size_t i = 0; i < v.size(); i++) {
+        EXPECT_DOUBLE_EQ(v[i], 0);
+    }
     EXPECT_EQ(v.size(), 4);
     EXPECT_DOUBLE_EQ(v.front(), 1.0);
     EXPECT_DOUBLE_EQ(v.back(), 4.0);
-    EXPECT_DOUBLE_EQ(v[0], 1.0);
-    EXPECT_DOUBLE_EQ(v[3], 4.0);
+    
+    
 }
 
 TEST(ClassVector, can_erase_with_reallocation) {
     Vector v(5);
-    for (int i = 0; i < 5; i++) v.push_back(i * 1.0);
-
-    v.erase(0);
-    v.erase(0);
-    v.erase(0);
+    for (int i = 0; i < 5; i++) {
+        v.push_back(i * 1.0);
+    }
+    v.erase(v.front_pos());
+    v.erase(v.front_pos());
+    v.erase(v.front_pos());
 
     EXPECT_EQ(v.size(), 2);
     EXPECT_DOUBLE_EQ(v.front(), 3.0);

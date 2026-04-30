@@ -4,7 +4,6 @@
 MemData::MemData(size_t size) {
 	_capacity = calculate_capacity(size);
 	_size = 0;
-	
 	_data = new value_type[_capacity];
 
 }

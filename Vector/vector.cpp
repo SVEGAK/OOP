@@ -64,67 +64,34 @@ Vector& Vector::operator=(Vector&& vector) noexcept
 	return (*this);
 }
 double Vector::operator[](size_t pos) const noexcept {
+	pos = (pos + _front) % capacity();
 	return _mem._data[pos];
 }
 double& Vector::operator[](size_t pos) noexcept
 {
-	return _mem._data[pos];
+	pos = (pos + _front) % capacity();
+	return (_mem._data[pos]);
 }
 void Vector::push_back(double elem) noexcept {
-	if (((*this).size() == 0) || (*this).is_empty()) {//если объект пуст или даже nullptr
+	if ((size() == 0) || is_empty()) {//если объект пуст или даже nullptr
 		push_when_empty(elem);
 		return;
 	}
 	
-	if ((*this).is_full()) {
-		(*this)._mem.reset_memory((*this).size()+1,_front,FRONT_BUFFER); // выделяем буфер
+	if (is_full()) {
+		_mem.reset_memory(size()+1,_front,FRONT_BUFFER); // выделяем буфер
 		_front = FRONT_BUFFER;
-		_back = _front + (*this).size() - 1; //пересчитываю back
-		(*this)._mem._data[_back] = elem;// ставлю элемент в нововыделенную ячейку
+		_back = _front + size() - 1; //пересчитываю back
+		_mem._data[_back] = elem;// ставлю элемент в нововыделенную ячейку
 		return;
 	}
 	_back++;
-	(*this)._mem._data[_back] = elem;
-	(*this).size_increase();
+	_mem._data[_back] = elem;
+	size_increase();
 	return;
 }
-//void Vector::insert(double elem, size_t pos)
-//{
-//	if ((pos > _back) || (pos < _front)) {
-//		throw std::out_of_range("Insert position must be in [" + std::to_string(_front) + ';' +	std::to_string(_back) + "].");
-//	}
-//	if ((is_empty())|| (size() == 0)) {//учитываем если буфер пуст( в том числе nullptr)
-//		push_when_empty(elem);
-//		return;
-//	}
-//	if (is_full()) { 
-//		_mem.reset_memory(size()+1,_front, FRONT_BUFFER); //увеличиваем на MEM_STEP size + выделяем буфер MEMSTEP
-//		_front = FRONT_BUFFER;
-//		_back = size()+_front-1;
-//		double old_subj = elem;
-//		double temp = 0;
-//		size_t i = static_cast<size_t>( pos + _front );
-//		if (pos > (capacity() / 2)) {//cap = 19
-//			for (i; i < _back; i++) {
-//				temp = _mem._data[i];
-//				(*this)._mem._data[i] = old_subj;
-//				old_subj = temp;
-//			}
-//			
-//		}else {
-//			for (i; i > _front-2; i--) {
-//				temp = _mem._data[i];
-//				_mem._data[i] = old_subj;
-//				old_subj = temp;
-//			}
-//			
-//		}
-//		return;
-//	}
-//}
 void Vector::insert(double elem, size_t pos)
 {
-	// FIX 1: pos — это логическая позиция [0, size()], а не физический индекс
 	if (pos > size()) {
 		throw std::out_of_range("Insert position must be in [0;" + std::to_string(size()) + "].");
 	}
@@ -140,33 +107,15 @@ void Vector::insert(double elem, size_t pos)
 		_back = _front + size() - 1;
 	}
 
-	size_t phys_pos = pos + _front;
-
-	// FIX 2: Используем size()/2 для выбора направления, а не capacity()/2
-	if (pos > size() / 2) {
-		// Сдвиг вправо: перемещаем хвост [phys_pos, _back] на одну позицию вправо
-		// Начинаем с конца, чтобы не затереть данные
-		for (size_t i = _back + 1; i > phys_pos; --i) {
-			_mem._data[i] = _mem._data[i - 1];
-		}
-		_mem._data[phys_pos] = elem;
-		++_back;
+	size_t phys_pos = (pos + _front)%capacity();
+	for (size_t i = _back + 1; i > phys_pos; i--) {
+		_mem._data[i] = _mem._data[i - 1];
 	}
-	else {
-		// FIX 3: Оригинальная логика "сдвига влево" была ошибочной.
-		// Для вставки в любом случае нужно освободить место на позиции phys_pos.
-		// Единственный корректный способ — сдвиг хвоста вправо.
-		// Ветвь оставлена для сохранения структуры, но выполняет ту же операцию.
-		for (size_t i = _back + 1; i > phys_pos; --i) {
-			_mem._data[i] = _mem._data[i - 1];
-		}
-		_mem._data[phys_pos] = elem;
-		++_back;
-	}
-
+	_mem._data[phys_pos] = elem;
+	++_back;
 	return;
 }
-void Vector::push_front(double elem) noexcept
+void Vector::push_front(value_type elem) noexcept
 {
 	if (((*this).size() == 0)|| ((*this).is_empty())) {//если объект пуст
 		push_when_empty(elem);
@@ -175,23 +124,23 @@ void Vector::push_front(double elem) noexcept
 	if (((*this).is_full())||(_front == _back)) {
 		(*this)._mem.reset_memory((*this)._mem.size() + 1,_front,FRONT_BUFFER); //увеличиваем на 1 ячейку size + выделяем буфер
 		_front = FRONT_BUFFER-1;//берем элемент перед тем который уже стоит первым 
-		(*this)._mem._data[_front] = elem;
+		(*this)[0] = elem;
 		return;
 	}
 	_front--;
-	(*this)._mem._data[_front] = elem;
+	(*this)[0] = elem;
 	(*this).size_increase();
 	return;
 }
-void Vector::push_when_empty(double elem) noexcept 
+void Vector::push_when_empty(value_type elem) noexcept 
 {
 	_front = FRONT_BUFFER;
-	if ((*this).capacity() < _front+1) {
-		(*this)._mem.set_memory(_front); //передается size = 5
+	if (capacity() < _front+1) {
+		_mem.set_memory(_front); //передается size = 5
 	}
 	_back = _front;
-	(*this)._mem._data[_front] = elem;
-	(*this).size_increase();
+	(*this)[0] = elem;
+	size_increase();
 	return;
 }
 void Vector::pop_when_empty() noexcept
@@ -200,11 +149,11 @@ void Vector::pop_when_empty() noexcept
 }
 void Vector::pop_front()
 {
-	if (((*this).size() == 0) || (*this).is_empty()) {//если объект пуст или даже nullptr
+	if ((_mem.size() == 0) || (*this).is_empty()) {//если объект пуст или даже nullptr
 		throw std::out_of_range("Can't pop empty list.");
 	}
-	(*this)._mem._data[_front] = 0;
-	_front++;
+	(*this)[0] = 0;
+	_front = (_front+1)%capacity();
 	(*this).size_decrease();
 	//Нужно ли сжать массив?
 }
@@ -228,35 +177,16 @@ void Vector::erase(size_t pos)
 	if (((*this).is_empty()) || ((*this).size() == 0)) {//учитываем если буфер пуст( в том числе nullptr)
 		throw std::out_of_range("Can't pop empty list.");
 	}
-	if ((*this).is_full()) {
-		double old_subj = 0;
-		double temp = -1;
-		size_t i = static_cast<size_t>(pos + _front);
-		if (pos > ((*this).capacity() / 2)) {
-			_back--;
-			size_t i = _back;
-			for (i; i > (pos + _front); i--) {
-				temp = (*this)._mem._data[i];
-				(*this)._mem._data[i] = old_subj;
-				old_subj = temp;
-			}
-		}
-		else {
-			_front++;
-			size_t i = _front;
-			for (i; i < (_front+pos); i++) {
-				temp = (*this)._mem._data[i];
-				(*this)._mem._data[i] = old_subj;
-				old_subj = temp;
-			}
-		}
-		//нужно ли сжать массив?
-		(*this).size_decrease();
-		return;
+	if (pos == 0) { (*this).pop_front(); return; }
+	else if (pos == _mem._size) { (*this).pop_back(); return; }
+	double old_subj = 0;
+	double temp = -1;
+	for (size_t i = _front; i < pos+1; i++) {
+		(*this)[i] = temp;
+		(*this)[i] = old_subj;
+		old_subj = temp;
 	}
-	else {
-		throw std::exception("Bad way");
-	}
+	_mem.reset_memory(_mem._size - 1, _front + 1,FRONT_BUFFER);
 }
 
 std::ostream& operator<<(std::ostream& os, const Vector& v) {
