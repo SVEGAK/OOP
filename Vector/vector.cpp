@@ -178,7 +178,7 @@ void Vector::erase(size_t pos)
 		throw std::out_of_range("Can't pop empty list.");
 	}
 	if (pos == 0) { (*this).pop_front(); return; }
-	else if (pos == _mem._size) { (*this).pop_back(); return; }
+	else if (pos == _mem._size-1) { (*this).pop_back(); return; }
 	double old_subj = 0;
 	double temp = -1;
 	for (size_t i = _front; i < pos+1; i++) {

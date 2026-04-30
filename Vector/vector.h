@@ -62,12 +62,12 @@ inline bool Vector::is_full() const noexcept
 
 inline size_t Vector::size() const noexcept
 {
-    return (*this)._mem.size();
+    return _mem.size();
 }
 
 inline size_t Vector::capacity() const noexcept
 {
-    return (*this)._mem.capacity();
+    return _mem.capacity();
 }
 
 inline size_t Vector::front_pos() const
@@ -82,24 +82,22 @@ inline size_t Vector::back_pos() const
 
 inline double Vector::front() const
 {
-    if (_mem.is_empty()) { throw std::out_of_range("Buffer ring is empty"); }
-    double res = _mem.data()[_front];
-    return res;
+    if (is_empty()) { throw std::out_of_range("Buffer ring is empty"); }
+    return (*this)[0];
 }
 inline double Vector::back() const
 {
-    if (_mem.is_empty()) { throw std::out_of_range("Buffer ring is empty"); }
-    double res = _mem.data()[_back];
-    return res;
+    if (is_empty()) { throw std::out_of_range("Buffer ring is empty"); }
+    return (*this)[(*this).size()-1];
 }
 inline void Vector::size_decrease() noexcept
 {
-    (*this)._mem._size--;
+    _mem._size--;
 }
 
 inline void Vector::size_increase() noexcept
 {
-    (*this)._mem._size++;
+    _mem._size++;
 }
 inline double& Vector::set_front() {
     if (is_empty()) {
