@@ -71,8 +71,11 @@ inline void MemData::clear_memory() noexcept // решил сделать inline, тк функция
 }
 inline int MemData::calculate_capacity(size_t size)
 {
-    if (size <= _size) {
+    if ((size <= _size)&&(size > 0)) {
         return size;
+    }
+    if (size <= MEM_STEP) {
+        return MEM_STEP;
     }
     return (size + MEM_STEP);
 }

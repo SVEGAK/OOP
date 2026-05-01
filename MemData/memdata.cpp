@@ -63,7 +63,7 @@ void MemData::set_memory(size_t size) noexcept
 void MemData::reset_memory(size_t size, size_t start_index, size_t placement_offset) noexcept //start index - индекс начала элементов в старом массиве
 {
 	value_type* old_data = _data;
-	_capacity = calculate_capacity(size + placement_offset);
+	_capacity = calculate_capacity(size);
 	_data = new value_type[_capacity];
 	if (size > _size){
 		for (size_t i = 0;i < _size; i++) {

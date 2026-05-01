@@ -16,7 +16,8 @@ public:
 
     inline bool is_empty() const noexcept;          // проверка на пустоту
     inline bool is_full() const noexcept;           // проверка на переполнение
-
+   
+    inline void compress() noexcept;  //сжатие буфера
     inline size_t size() const noexcept;            // геттер размера
     inline size_t capacity() const noexcept;        // геттер вместимости
     inline double front() const;                    // геттер первого элемента
@@ -37,6 +38,7 @@ public:
     void pop_front();                               // удаление элемента из начала
     void pop_back();                                // удаление элемента из конца
     void erase(size_t pos);                         // удаление элемента по позиции
+   
     
     Vector& operator=(const Vector& vector) noexcept;      // оператор присваивания
     Vector& operator=(Vector&& vector) noexcept;           // оператор присваивания с move-семантикой
@@ -56,8 +58,16 @@ inline bool Vector::is_empty() const noexcept
 
 inline bool Vector::is_full() const noexcept
 {
-    if ((_back == (_mem._capacity - 1)) || (_mem.is_full())||(_front == 0)) { return true; }
+    if ((_back == (_mem._capacity - 1)) || (_mem.is_full())) { return true; }
     return false;
+}
+
+inline void Vector::compress() noexcept
+{
+    if (size() <= capacity() / 2) {
+        _mem.reset_memory(size(), _front, 0);
+        _front = 0; _back = size() - 1;
+    }
 }
 
 inline size_t Vector::size() const noexcept
