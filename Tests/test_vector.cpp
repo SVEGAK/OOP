@@ -847,5 +847,224 @@ TEST(ClassVector, combination_push_pop_insert_erase) {
         EXPECT_DOUBLE_EQ(vec[i], i + 1);
     }
 }
+TEST(ClassVector, can_push_back_n_empty) {
+    Vector v;
+    double vals[] = { 1.0, 2.0, 3.0 };
+    v.push_back_n(vals, 3);
 
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_EQ(v.capacity(), MEM_STEP);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_EQ(v.front_pos(), 0);
+    EXPECT_EQ(v.back_pos(), 2);
+}
+
+TEST(ClassVector, can_push_back_n_no_realloc) {
+    Vector v(10);                     // capacity = 15
+    v.push_back(10.0);                // size=1, back=0
+    double vals[] = { 20.0, 30.0 };
+    v.push_back_n(vals, 2);           // должно хватить места без реаллокации
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_EQ(v.capacity(), 15);
+    EXPECT_DOUBLE_EQ(v[0], 10.0);
+    EXPECT_DOUBLE_EQ(v[1], 20.0);
+    EXPECT_DOUBLE_EQ(v[2], 30.0);
+    EXPECT_EQ(v.front_pos(), 0);
+    EXPECT_EQ(v.back_pos(), 2);
+}
+
+TEST(ClassVector, can_push_back_n_with_reallocation) {
+    Vector v = { 1.0, 2.0, 3.0 };       // capacity = 3, full
+    double vals[] = { 4.0, 5.0, 6.0 };
+    size_t old_cap = v.capacity();
+    v.push_back_n(vals, 3);
+
+    EXPECT_EQ(v.size(), 6);
+    EXPECT_GE(v.capacity(), 6);
+    EXPECT_EQ(v.front_pos(), FRONT_BUFFER); // после реаллокации с буфером
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_DOUBLE_EQ(v[3], 4.0);
+    EXPECT_DOUBLE_EQ(v[4], 5.0);
+    EXPECT_DOUBLE_EQ(v[5], 6.0);
+}
+
+// push_front_n
+TEST(ClassVector, can_push_front_n_empty) {
+    Vector v;
+    double vals[] = { 3.0, 2.0, 1.0 };
+    v.push_front_n(vals, 3);
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_EQ(v.capacity(), MEM_STEP);
+    EXPECT_DOUBLE_EQ(v[0], 3.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 1.0);
+    EXPECT_EQ(v.front_pos(), 0);
+    EXPECT_EQ(v.back_pos(), 2);
+}
+
+TEST(ClassVector, can_push_front_n_no_realloc) {
+    Vector v(10);
+    v.push_front(10.0);               // front=9, back=9 (после push_front для size=0 вызывает push_when_empty, затем front=0)
+    // Сбросим в нормальное состояние: v = {10} с front=0
+    // Легче создать готовый вектор с местом спереди:
+    Vector v2(10);
+    v2.push_back(1.0);
+    v2.push_back(2.0);
+    v2.push_back(3.0);                // сейчас front=0, back=2
+    double vals[] = { -2.0, -1.0, 0.0 };
+    v2.push_front_n(vals, 3);         // front сдвинется на 3 назад
+
+    EXPECT_EQ(v2.size(), 6);
+    EXPECT_DOUBLE_EQ(v2[0], -2.0);
+    EXPECT_DOUBLE_EQ(v2[1], -1.0);
+    EXPECT_DOUBLE_EQ(v2[2], 0.0);
+    EXPECT_DOUBLE_EQ(v2[3], 1.0);
+    EXPECT_DOUBLE_EQ(v2[4], 2.0);
+    EXPECT_DOUBLE_EQ(v2[5], 3.0);
+    EXPECT_EQ(v2.front_pos(), 4);
+}
+
+TEST(ClassVector, can_push_front_n_with_reallocation) {
+    Vector v = { 1.0, 2.0, 3.0 };       // capacity=3, full
+    double vals[] = { -1.0, 0.0 };
+    v.push_front_n(vals, 2);          
+
+    EXPECT_EQ(v.size(), 5);
+    EXPECT_GE(v.capacity(), 5);
+    EXPECT_EQ(v.front_pos(), 4); 
+    EXPECT_DOUBLE_EQ(v[0], -1.0);
+    EXPECT_DOUBLE_EQ(v[1], 0.0);
+    EXPECT_DOUBLE_EQ(v[2], 1.0);
+    EXPECT_DOUBLE_EQ(v[3], 2.0);
+    EXPECT_DOUBLE_EQ(v[4], 3.0);
+}
+
+// insert_n
+TEST(ClassVector, can_insert_n_middle) {
+    Vector v = { 1.0, 5.0, 6.0 };
+    double vals[] = { 2.0, 3.0, 4.0 };
+    v.insert_n(1, vals, 3);           // вставляем после 1.0
+
+    EXPECT_EQ(v.size(), 6);
+    EXPECT_GE(v.capacity(), 6);
+    EXPECT_EQ(v.front_pos(), FRONT_BUFFER);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_DOUBLE_EQ(v[3], 4.0);
+    EXPECT_DOUBLE_EQ(v[4], 5.0);
+    EXPECT_DOUBLE_EQ(v[5], 6.0);
+}
+
+TEST(ClassVector, can_insert_n_at_front) {
+    Vector v = { 3.0, 4.0 };
+    double vals[] = { 1.0, 2.0 };
+    v.insert_n(0, vals, 2);           // то же, что push_front_n
+
+    EXPECT_EQ(v.size(), 4);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_DOUBLE_EQ(v[3], 4.0);
+}
+
+TEST(ClassVector, can_insert_n_at_back) {
+    Vector v = { 1.0, 2.0 };
+    double vals[] = { 3.0, 4.0 };
+    v.insert_n(2, vals, 2);           // то же, что push_back_n
+
+    EXPECT_EQ(v.size(), 4);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_DOUBLE_EQ(v[3], 4.0);
+}
+
+TEST(ClassVector, throw_when_insert_n_wrong_position) {
+    Vector v = { 1.0, 2.0, 3.0 };
+    double vals[] = { 0.0 };
+
+    EXPECT_THROW(v.insert_n(4, vals, 1), std::out_of_range);   // pos > size()
+    EXPECT_THROW(v.insert_n(5, vals, 1), std::out_of_range);
+    Vector empty_v;
+    EXPECT_THROW(empty_v.insert_n(1, vals, 1), std::out_of_range); // пустой, pos > 0
+}
+
+
+// erase_n
+TEST(ClassVector, can_erase_n_middle) {
+    Vector v = { 1.0, 99.0, 100.0, 2.0, 3.0 };
+    v.erase_n(1, 2);                 // удаляем два элемента начиная с позиции 1
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+}
+
+TEST(ClassVector, can_erase_n_front) {
+    Vector v = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+    v.erase_n(0, 2);                 // удаляем первые два
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_DOUBLE_EQ(v[0], 3.0);
+    EXPECT_DOUBLE_EQ(v[1], 4.0);
+    EXPECT_DOUBLE_EQ(v[2], 5.0);
+}
+
+TEST(ClassVector, can_erase_n_back) {
+    Vector v = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+    v.erase_n(3, 2);                 // удаляем последние два
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+}
+
+TEST(ClassVector, can_erase_n_all) {
+    Vector v = { 1.0, 2.0, 3.0 };
+    v.erase_n(0, 3);                 // удалить все
+
+    EXPECT_TRUE(v.is_empty());
+    EXPECT_EQ(v.size(), 0);
+}
+
+TEST(ClassVector, throw_when_erase_n_wrong_position) {
+    Vector v = { 1.0, 2.0, 3.0 };
+
+    EXPECT_THROW(v.erase_n(3, 1), std::out_of_range);   // pos == size()
+    EXPECT_THROW(v.erase_n(1, 3), std::out_of_range);   // pos + n > size()
+    EXPECT_THROW(v.erase_n(4, 1), std::out_of_range);   // pos > size()
+    Vector empty_v;
+    EXPECT_THROW(empty_v.erase_n(0, 1), std::out_of_range); // из пустого
+}
+
+// комбинация разных операций (аналог существующего combination_push_pop_insert_erase)
+TEST(ClassVector, combination_push_pop_insert_erase_n) {
+    Vector v = { 5.0, 6.0, 7.0 };
+    double front_vals[] = { 3.0, 4.0 };
+    v.push_front_n(front_vals, 2);        // {3,4,5,6,7}
+    double back_vals[] = { 8.0, 9.0 };
+    v.push_back_n(back_vals, 2);          // {3,4,5,6,7,8,9}
+
+    double insert_vals[] = { 10.0, 11.0 };
+    v.insert_n(2, insert_vals, 2);        // {3,4,10,11,5,6,7,8,9}
+
+    v.erase_n(0, 2);                      // {10,11,5,6,7,8,9}
+    v.erase_n(3, 2);                      // {10,11,5,8,9}
+
+    EXPECT_EQ(v.size(), 5);
+    EXPECT_DOUBLE_EQ(v[0], 10.0);
+    EXPECT_DOUBLE_EQ(v[1], 11.0);
+    EXPECT_DOUBLE_EQ(v[2], 5.0);
+    EXPECT_DOUBLE_EQ(v[3], 8.0);
+    EXPECT_DOUBLE_EQ(v[4], 9.0);
+}
 #endif

@@ -40,14 +40,19 @@ public:
     void erase(size_t pos);                         // удаление элемента по позиции
    
     
-    Vector& operator=(const Vector& vector) noexcept;      // оператор присваивания
-    Vector& operator=(Vector&& vector) noexcept;           // оператор присваивания с move-семантикой
+    Vector& operator=(const Vector& vector) noexcept;            // оператор присваивания
+    Vector& operator=(Vector&& vector) noexcept;                 // оператор присваивания с move-семантикой
 
-    double operator[](size_t pos) const noexcept;       // оператор обращения по индексу константный
-    double& operator[](size_t pos) noexcept;            // оператор обращения по индексу
+    double operator[](size_t pos) const noexcept;                 // оператор обращения по индексу константный
+    double& operator[](size_t pos) noexcept;                      // оператор обращения по индексу
 
-    friend std::ostream& operator<<(std::ostream&, const Vector&);     // вывод
-    friend std::istream& operator>>(std::istream&, Vector&);           // ввод
+    friend std::ostream& operator<<(std::ostream&, const Vector&);// вывод
+    friend std::istream& operator>>(std::istream&, Vector&);      // ввод
+
+    void push_back_n(const value_type* values, size_t n);         //вставка в конец n элементов
+    void push_front_n(const value_type* values, size_t n);        //вставка в начало n элементов
+    void insert_n(size_t pos, const value_type* values, size_t n);//вставка в позицию pos n элементов
+    void erase_n(size_t pos, size_t n);                           //удаление n элементов
 };
 
 

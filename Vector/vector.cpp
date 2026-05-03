@@ -171,6 +171,14 @@ void Vector::pop_back()
 	if (((*this).size() == 0) || (*this).is_empty()) {//если объект пуст или даже nullptr
 		throw std::out_of_range("Can't pop empty list.");
 	}
+	if (_back == 0) {
+		_mem._data[_back] = 0;
+		_back = 0;
+		size_decrease();
+		compress();
+		return;
+	}
+	else if (_back < 0) { throw std::out_of_range("back pos element out of massive."); }
 	_mem._data[_back] = 0;
 	_back--;
 	size_decrease();
@@ -218,4 +226,42 @@ std::istream& operator>>(std::istream& is, Vector& v) {
 		v.push_back(temp);
 	}
 	return is;
+}
+
+void Vector::push_back_n(const value_type* values, size_t n) {
+	if (n == 0) return;
+	for (size_t i = 0;i < n;i++) {
+		(*this).push_back(values[i]);
+	}
+}
+
+void Vector::push_front_n(const value_type* values, size_t n) {
+	if (n == 0) return;
+	for (size_t i = 0;i < n;i++) {
+		if (i == 0) {
+			(*this).push_front(values[0]);
+			continue;
+		}
+		(*this).insert(values[i], i);
+	}
+}
+
+void Vector::insert_n(size_t pos, const value_type* values, size_t n) {
+	if (n == 0) return;
+	if (pos == 0) { push_front_n(values, n); return; }
+	if (pos == size()) { push_back_n(values, n); return; }
+	for (size_t i = 0; i < n; i++) {
+		(*this).insert(values[i], pos+i);
+	}
+}
+
+void Vector::erase_n(size_t pos, size_t n) {
+	if (n == 0) return;
+	if (pos + n > size()) {
+		throw std::out_of_range("erase_n range out of bounds");
+	}
+	for (size_t i = 0; i < n;i++) {
+		erase(pos);
+	}
+
 }
