@@ -65,11 +65,9 @@ void BaseFraction::simplify() noexcept {//Вызывается для класс
 	//std::cout << "basefraction method\n";//Вместо simplify() из Fraction, но это не оказывает вляния на результаты
 }
 
-BaseFraction& BaseFraction::to_base_fraction() noexcept
+void BaseFraction::to_base_fraction() noexcept
 {
 	// в BaseFraction - пуст.
-	BaseFraction b;
-	return b;
 }
 
 BaseFraction::BaseFraction(): _num(0), _denom(1){}
