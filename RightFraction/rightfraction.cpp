@@ -25,10 +25,10 @@ int RightFraction::parseInteger(const std::string& input_str, size_t pos) {//pos
     return std::stoi(input_str.substr(0, pos));   
 }
 
-void RightFraction::to_base_fraction() noexcept
+BaseFraction& RightFraction::to_base_fraction() noexcept
 {
-    _num = _num + (_integer * _denom);
-    _integer = 0;
+    BaseFraction that((*this)._num + ((*this)._integer * (*this)._denom), (*this)._denom);
+    return that;
 }
 
 void RightFraction::simplify() noexcept
@@ -135,175 +135,142 @@ std::istream& operator>>(std::istream& in, RightFraction& frac)
 //Операторы
 // Присваивание с арифметикой
 RightFraction& RightFraction::operator+=(const RightFraction& other) {
-    to_base_fraction();
-    BaseFraction otherCopy = other;
-    BaseFraction& thisBase = *this;
-    thisBase += otherCopy;
+    BaseFraction that = (*this).to_base_fraction();
+    RightFraction Other = other;
+    that += Other.to_base_fraction();
+    (*this) = that;
     simplify();
     return *this;
 }
 
 RightFraction& RightFraction::operator+=(const Fraction& other) {
-    to_base_fraction();
-    BaseFraction& thisBase = *this;
-    thisBase += other;
-    simplify();
+    RightFraction Other = other;
+    (*this) += Other;
     return *this;
 }
 
 RightFraction& RightFraction::operator+=(int num) {
-    to_base_fraction();
-    BaseFraction& thisBase = *this;
-    thisBase += num;
-    simplify();
+    _num = _num + num;
     return *this;
 }
 
 RightFraction& RightFraction::operator-=(const RightFraction& other) {
-    to_base_fraction();
-    BaseFraction otherCopy = other;
-    BaseFraction& thisBase = *this;
-    thisBase -= otherCopy;
+    BaseFraction that = (*this).to_base_fraction();
+    RightFraction Other = other;
+    that -= Other.to_base_fraction();
+    (*this) = that;
     simplify();
     return *this;
 }
 
 RightFraction& RightFraction::operator-=(const Fraction& other) {
-    to_base_fraction();
-    BaseFraction& thisBase = *this;
-    thisBase -= other;
-    simplify();
+    RightFraction Other = other;
+    (*this) -= Other;
     return *this;
 }
 
 RightFraction& RightFraction::operator-=(int num) {
-    to_base_fraction();
-    BaseFraction& thisBase = *this;
-    thisBase -= num;
-    simplify();
-    return *this;
+    if (_num >= num) {
+        _num -= num;
+        return (*this);
+    }
+    BaseFraction That = (*this).to_base_fraction();
+    That -= num; (*this) = That;
+    return (*this);
 }
 
+
 RightFraction& RightFraction::operator*=(const RightFraction& other) {
-    to_base_fraction();
-    BaseFraction otherCopy = other;
-    BaseFraction& thisBase = *this;
-    thisBase *= otherCopy;
+    BaseFraction that = (*this).to_base_fraction();
+    RightFraction Other = other;
+    that *= Other.to_base_fraction();          
+    (*this) = that;
     simplify();
     return *this;
 }
 
 RightFraction& RightFraction::operator*=(const Fraction& other) {
-    to_base_fraction();
-    BaseFraction& thisBase = *this;
-    thisBase *= other;
+    RightFraction Other = other;
+    (*this) *= Other;
     simplify();
     return *this;
 }
 
 RightFraction& RightFraction::operator*=(int num) {
-    to_base_fraction();
-    BaseFraction& thisBase = *this;
-    thisBase *= num;
-    simplify();
+    _num *= num;
     return *this;
 }
 
+
 RightFraction& RightFraction::operator/=(const RightFraction& other) {
-    to_base_fraction();
-    BaseFraction otherCopy = other;
-    BaseFraction& thisBase = *this;
-    thisBase /= otherCopy;
+    BaseFraction that = (*this).to_base_fraction();
+    RightFraction Other = other;
+    that /= Other.to_base_fraction();
+    (*this) = that;
     simplify();
     return *this;
 }
 
 RightFraction& RightFraction::operator/=(const Fraction& other) {
-    to_base_fraction();
-    BaseFraction& thisBase = *this;
-    thisBase /= other;
+    RightFraction Other = other;
+    (*this) /= Other;
     simplify();
     return *this;
 }
 
 RightFraction& RightFraction::operator/=(int num) {
-    to_base_fraction();
-    BaseFraction& thisBase = *this;
-    thisBase /= num;
+    BaseFraction that = (*this).to_base_fraction();
+    that /= num;
+    (*this) = that;
     simplify();
     return *this;
 }
 
-// Арифметические операторы
-RightFraction RightFraction::operator+(const RightFraction& other) const {
-    RightFraction res(*this);
-    res += other;
+RightFraction operator+(const Fraction& lhs, const RightFraction& rhs) {
+    RightFraction res = lhs;   
+    res += rhs;
     return res;
 }
 
-RightFraction RightFraction::operator+(const Fraction& other) const {
-    RightFraction res(*this);
-    res += other;
+RightFraction operator+(int lhs, const RightFraction& rhs) {
+    RightFraction res = lhs;   
+    res += rhs;
     return res;
 }
 
-RightFraction RightFraction::operator+(int num) const {
-    RightFraction res(*this);
-    res += num;
+RightFraction operator-(const Fraction& lhs, const RightFraction& rhs) {
+    RightFraction res = lhs;
+    res -= rhs;
     return res;
 }
 
-RightFraction RightFraction::operator-(const RightFraction& other) const {
-    RightFraction res(*this);
-    res -= other;
+RightFraction operator-(int lhs, const RightFraction& rhs) {
+    RightFraction res = lhs;
+    res -= rhs;
     return res;
 }
 
-RightFraction RightFraction::operator-(const Fraction& other) const {
-    RightFraction res(*this);
-    res -= other;
+RightFraction operator*(const Fraction& lhs, const RightFraction& rhs) {
+    RightFraction res = lhs;
+    res *= rhs;
     return res;
 }
 
-RightFraction RightFraction::operator-(int num) const {
-    RightFraction res(*this);
-    res -= num;
+RightFraction operator*(int lhs, const RightFraction& rhs) {
+    RightFraction res = lhs;
+    res *= rhs;
     return res;
 }
 
-RightFraction RightFraction::operator*(const RightFraction& other) const {
-    RightFraction res(*this);
-    res *= other;
+RightFraction operator/(const Fraction& lhs, const RightFraction& rhs) {
+    RightFraction res = lhs;
+    res /= rhs;
     return res;
 }
 
-RightFraction RightFraction::operator*(const Fraction& other) const {
-    RightFraction res(*this);
-    res *= other;
-    return res;
-}
-
-RightFraction RightFraction::operator*(int num) const {
-    RightFraction res(*this);
-    res *= num;
-    return res;
-}
-
-RightFraction RightFraction::operator/(const RightFraction& other) const {
-    RightFraction res(*this);
-    res /= other;
-    return res;
-}
-
-RightFraction RightFraction::operator/(const Fraction& other) const {
-    RightFraction res(*this);
-    res /= other;
-    return res;
-}
-
-RightFraction RightFraction::operator/(int num) const {
-    RightFraction res(*this);
-    res /= num;
+RightFraction operator/(int lhs, const RightFraction& rhs) {
+    RightFraction res = lhs;
+    res /= rhs;
     return res;
 }
 // Операторы сравнения

@@ -65,9 +65,11 @@ void BaseFraction::simplify() noexcept {//Вызывается для класс
 	//std::cout << "basefraction method\n";//Вместо simplify() из Fraction, но это не оказывает вляния на результаты
 }
 
-void BaseFraction::to_base_fraction() noexcept
+BaseFraction& BaseFraction::to_base_fraction() noexcept
 {
 	// в BaseFraction - пуст.
+	BaseFraction b;
+	return b;
 }
 
 BaseFraction::BaseFraction(): _num(0), _denom(1){}
@@ -94,9 +96,11 @@ std::string BaseFraction::to_string() const {
 }
 //Арифметические операторы с присвоением
 BaseFraction& BaseFraction::operator+=(const BaseFraction& other) {
-	to_base_fraction();
-	this->_num = (_num * other._denom) + (other._num * _denom);
-	this->_denom = _denom * other._denom;
+	(*this).to_base_fraction();
+	BaseFraction other_copy = other;
+	other_copy.to_base_fraction();
+	(*this)._num = (_num * other_copy._denom) + (other_copy._num * _denom);
+	(*this)._denom = _denom * other_copy._denom;
 	simplify();
 	return (*this);
 };
