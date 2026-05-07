@@ -5,7 +5,7 @@ class RightFraction : public Fraction {
 	size_t find_Integer_pos(const std::string& input_str);
 	int parseInteger(const std::string& input_str, size_t pos);
 	//Целая часть
-	BaseFraction to_base_fraction() const noexcept override;
+	BaseFraction& to_base_fraction() const noexcept override;
 	void simplify() noexcept override;
 	public:
 	// Конструкторы RightFraction

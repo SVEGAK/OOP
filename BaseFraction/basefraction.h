@@ -14,7 +14,7 @@ protected:
 	//Служебные функции 
 	int max_delt(int a, int b);//вспомогательная функция для simplify
 	virtual void simplify() noexcept;// упрощение дроби
-	virtual BaseFraction to_base_fraction() const noexcept;
+	virtual BaseFraction& to_base_fraction() const noexcept;
 	static int parseNum(const std::string& str);
 	static int parseDenom(const std::string& str);
 

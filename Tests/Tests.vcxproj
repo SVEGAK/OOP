@@ -57,7 +57,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>F:\C unn\BullsAndCows;F:\C unn\Complex;F:\C unn\Fraction;F:\C unn\MemData;F:\C unn\Vector;F:\C unn\Monom;F:\C unn\RightFraction;F:\C unn\BaseFraction;F:\C unn\LongNumbers;F:\C unn\Time;F:\C unn\STL;F:\C unn\Date;F:\C unn\GeometryLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\BullsAndCows;..\Complex;..\Fraction;..\MemData;..\Vector;..\Monom;..\RightFraction;..\BaseFraction;..\LongNumbers;..\Time;..\STL;..\Date;..\GeometryLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
