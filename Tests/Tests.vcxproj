@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{a15d942d-9a30-42ae-8ddb-c8a7b3fc4c25}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -57,7 +57,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>F:\C unn\RightFraction;F:\C unn\Vector;F:\C unn\MemData;F:\C unn\LongNumbers;F:\C unn\Monom;F:\C unn\Date;F:\C unn\Complex;F:\C unn\Time;F:\C unn\BullsAndCows;F:\C unn\GeometryLib;F:\C unn\STL;F:\C unn\BaseFraction;F:\C unn\Fraction;E:\OOP-git\Fraction;E:\OOP-git\RightFraction;E:\OOP-git\BaseFraction;E:\OOP-git\BullsAndCows;E:\OOP-git\BullsAndCowsLib;E:\OOP-git\Complex;E:\OOP-git\Date;E:\OOP-git\GeometryLib;E:\OOP-git\LongNumbers;E:\OOP-git\MageArena;E:\OOP-git\mass;E:\OOP-git\MemData;E:\OOP-git\Monom;E:\OOP-git\STL;E:\OOP-git\Time;E:\OOP-git\Vector;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\C unn\BullsAndCows;F:\C unn\Complex;F:\C unn\Fraction;F:\C unn\MemData;F:\C unn\Vector;F:\C unn\Monom;F:\C unn\RightFraction;F:\C unn\BaseFraction;F:\C unn\LongNumbers;F:\C unn\Time;F:\C unn\STL;F:\C unn\Date;F:\C unn\GeometryLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

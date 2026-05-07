@@ -16,22 +16,4 @@ class Fraction: public BaseFraction{
 	//Оператор присваивания с преобразованием
 	Fraction& operator=(const BaseFraction&) noexcept;
 
-    // Арифметика (возвращают Fraction, локальные копии создаются типом Fraction)
-    Fraction operator+(int num) const;
-    Fraction operator+(const BaseFraction& other) const;
-    Fraction operator-(int num) const;
-    Fraction operator-(const BaseFraction& other) const;
-    Fraction operator*(int num) const;
-    Fraction operator*(const BaseFraction& other) const;
-    Fraction operator/(int num) const;
-    Fraction operator/(const BaseFraction& other) const;
-
-    // Сравнение (локальные копии создаются типом Fraction)
-    bool operator==(const BaseFraction& other) const;
-    bool operator!=(const BaseFraction& other) const;
-    bool operator>(const BaseFraction& other) const;
-    bool operator<(const BaseFraction& other) const;
-    bool operator>=(const BaseFraction& other) const;
-    bool operator<=(const BaseFraction& other) const;
-
 };

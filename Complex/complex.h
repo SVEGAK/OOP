@@ -101,7 +101,10 @@ Complex Complex::operator/=(const Complex& other) {
 	}
 	return Complex(_re /= other._re, _im /= other._im);
 
-};
+}
+
+;
+
 bool Complex::operator==(const Complex& other) const{
 	if ((_re == other._re) && (_im == other._im)) {
 		return true;

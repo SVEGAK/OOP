@@ -1,6 +1,6 @@
 #include "basefraction.h"
-
-int BaseFraction::max_delt(int a, int b) {
+#include <cmath>
+int BaseFraction::max_delt(int a, int b) {//перенести во Fraction 
 	int delt = 1;
 	a = abs(a);
 	b = abs(b);
@@ -65,7 +65,7 @@ void BaseFraction::simplify() noexcept {//Вызывается для класс
 	//std::cout << "basefraction method\n";//Вместо simplify() из Fraction, но это не оказывает вляния на результаты
 }
 
-void BaseFraction::to_base_fraction() noexcept
+void BaseFraction::to_base_fraction() const noexcept
 {
 	// в BaseFraction - пуст.
 }
@@ -93,12 +93,13 @@ std::string BaseFraction::to_string() const {
 	return std::to_string(_num) + "/" + std::to_string(_denom);
 }
 //Арифметические операторы с присвоением
-BaseFraction& BaseFraction::operator+=(const BaseFraction& other) {
-	(*this).to_base_fraction();
+BaseFraction& BaseFraction::operator+=(const BaseFraction& other) {//Переписать to_base_fraction чтобы он возвращал
+																	//
+	to_base_fraction();
 	BaseFraction other_copy = other;
 	other_copy.to_base_fraction();
-	(*this)._num = (_num * other_copy._denom) + (other_copy._num * _denom);
-	(*this)._denom = _denom * other_copy._denom;
+	_num = (_num * other_copy._denom) + (other_copy._num * _denom);
+	_denom = _denom * other_copy._denom;
 	simplify();
 	return (*this);
 };
@@ -297,3 +298,9 @@ bool BaseFraction::operator>=(int num) const {
 bool BaseFraction::operator<=(int num) const {
 	return (((*this) < num) || ((*this) == num));
 }
+//BullandCows сделать приложение читабельным
+//CDate CTime доделать
+//to_base_fraction изменить так чтобы он возращал объект BaseFraction
+//Complex переделать операторы без дублирования
+//Конструктор по строке Complex исправить
+//Добавить перемешивание и сортировку в vector
