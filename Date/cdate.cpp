@@ -38,19 +38,19 @@ char CDate::day() const noexcept {
 }
 
 void CDate::year(int newYear) {//Реализация сеттеров
-    if (newYear < 0) { throw std::invalid_argument(""); }
+    if (newYear < 0) { throw std::invalid_argument("Incorrect Year value"); }
     _year = 0;
     add_year(newYear);
 }
 
 void CDate::month(int newMonth) {
-    if ((newMonth <= 0) || newMonth > 12) { throw std::invalid_argument(""); }
+    if ((newMonth <= 0) || newMonth > 12) { throw std::invalid_argument("Incorrect Month count"); }
     _month = 0;
     add_month(newMonth);
 }
 
 void CDate::day(int newDay) {
-    if ((newDay <= 0) || (newDay > 31)) { throw std::invalid_argument(""); }
+    if ((newDay <= 0) || (newDay > 31)) { throw std::invalid_argument("Incorrect Days count"); }
     _day = 0;
     add_day(newDay);
 }
