@@ -2,9 +2,11 @@
 #include "basefraction.h"
 
 class Fraction: public BaseFraction{
-	private:
+	protected:
 	//Служебные функции 
+	int max_delt(int a, int b);//вспомогательная функция для simplify
 	virtual void simplify() noexcept override; // упрощение дроби
+	
 	public:
 	// Конструкторы
 	Fraction(); // контруктор инициализации по умолчанию

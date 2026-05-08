@@ -5,28 +5,28 @@ TEST(ClassFraction, check_default_constructor) {
 	Fraction f1;
 	EXPECT_EQ(f1.num(), 0);
 	EXPECT_EQ(f1.denom(), 1);
-};
+}
 TEST(ClassFraction, check_init_constructor) {
 	Fraction f1(1, 2);
 	EXPECT_EQ(f1.num(), 1);
 	EXPECT_EQ(f1.denom(), 2);
-};
+}
 TEST(ClassFraction, check_init_minus_constructor) {
 	Fraction f1(-1, 2);
 	EXPECT_EQ(f1.num(), -1);
 	EXPECT_EQ(f1.denom(), 2);
-};
+}
 TEST(ClassFraction, check_init_denom_zero_constructor) {
 	
 	EXPECT_THROW({
 		Fraction f1(1, 0); 
 	}, std::invalid_argument);
-};
+}
 TEST(ClassFraction, check_partion_init_constructor) {
 	Fraction f1(4);
 	EXPECT_EQ(f1.num(), 4);
 	EXPECT_EQ(f1.denom(), 1);
-};
+}
 TEST(ClassFraction, check_fraction_copy_constructor) {
 	Fraction f1(2, 5);
 	Fraction f2(f1);
@@ -235,7 +235,7 @@ TEST(ClassFraction, op_div_assign_fraction_negative) {
 TEST(ClassFraction, op_div_assign_fraction_by_zero) {
     Fraction f1(1, 2);
     Fraction f2(0, 1);
-    EXPECT_THROW(f1 /= f2, std::invalid_argument);
+    EXPECT_THROW(f1 /= f2, std::domain_error);
 }
 
 TEST(ClassFraction, op_div_assign_int_basic) {
@@ -254,7 +254,7 @@ TEST(ClassFraction, op_div_assign_int_negative) {
 
 TEST(ClassFraction, op_div_assign_int_by_zero) {
     Fraction f1(3, 4);
-    EXPECT_THROW(f1 /= 0, std::invalid_argument);
+    EXPECT_THROW(f1 /= 0, std::domain_error);
 }
 
 TEST(ClassFraction, op_assign_modifies_original) {

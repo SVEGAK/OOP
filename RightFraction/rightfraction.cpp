@@ -26,7 +26,7 @@ int RightFraction::parseInteger(const std::string& input_str, size_t pos) {//pos
 }
 
 
-BaseFraction& RightFraction::to_base_fraction() const noexcept
+BaseFraction RightFraction::to_base_fraction() const noexcept
 {
     BaseFraction obj(_num + (_integer * _denom), _denom);
     return obj;

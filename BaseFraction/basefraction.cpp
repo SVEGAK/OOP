@@ -1,30 +1,6 @@
 #include "basefraction.h"
 #include <cmath>
-int BaseFraction::max_delt(int a, int b) {//перенести во Fraction 
-	int delt = 1;
-	a = abs(a);
-	b = abs(b);
-	if ((a == 0) && (b != 0)) {
-		return b;
-	}
-	else if ((b == 0) && (a != 0)) {
-		return a;
-	}
 
-	if (b > a) {
-		int c = b;
-		b = a;
-		a = c;
-	}
-	for (int i = 1; i < b + 1; i++) {
-		if ((a % i == 0) && (b % i == 0)) {
-			if (i > delt) {
-				delt = i;
-			}
-		}
-	}
-	return delt;
-}
 int BaseFraction::parseNum(const std::string& str) {
 	std::string input_str = str;
 	input_str.erase(std::remove(input_str.begin(), input_str.end(), ' '), input_str.end());
@@ -61,11 +37,9 @@ int BaseFraction::parseDenom(const std::string& str) {
 	return denom;
 }
 
-void BaseFraction::simplify() noexcept {//Вызывается для класса Fraction для некоторых операторов сравнения 
-	//std::cout << "basefraction method\n";//Вместо simplify() из Fraction, но это не оказывает вляния на результаты
-}
+void BaseFraction::simplify() noexcept {}
 
-BaseFraction& BaseFraction::to_base_fraction() const noexcept
+BaseFraction BaseFraction::to_base_fraction() const noexcept
 {
 	BaseFraction obj((*this));
 	return obj;
@@ -95,88 +69,98 @@ std::string BaseFraction::to_string() const {
 	return std::to_string(_num) + "/" + std::to_string(_denom);
 }
 //Арифметические операторы с присвоением
-BaseFraction& BaseFraction::operator+=(const BaseFraction& other) {//Переписать to_base_fraction чтобы он возвращал
-																	//
-	to_base_fraction();
-	BaseFraction other_copy = other;
-	other_copy.to_base_fraction();
-	_num = (_num * other_copy._denom) + (other_copy._num * _denom);
-	_denom = _denom * other_copy._denom;
+BaseFraction& BaseFraction::operator+=(const BaseFraction& other) {
+	BaseFraction this_base = (*this).to_base_fraction();
+	BaseFraction other_base_copy = other.to_base_fraction();
+	this_base._num = (this_base._num * other_base_copy._denom) + (other_base_copy._num * this_base._denom);
+	this_base._denom = this_base._denom * other_base_copy._denom;
+	(*this) = this_base;
 	simplify();
 	return (*this);
-};
+}
 BaseFraction& BaseFraction::operator+=(int num) {
-	to_base_fraction();
-	this->_num = _num + (num * _denom);
+	BaseFraction this_base = (*this).to_base_fraction();
+	this_base._num = this_base._num + (num * this_base._denom);
+	(*this) = this_base;
 	simplify();
 	return (*this);
-};
+}
 BaseFraction& BaseFraction::operator-=(const BaseFraction& other) {
-	to_base_fraction();
-	this->_num = (_num * other._denom) - (other._num * _denom);
-	this->_denom = _denom * other._denom;
+	BaseFraction this_base = (*this).to_base_fraction();
+	BaseFraction other_base_copy = other.to_base_fraction();
+	this_base._num = (this_base._num * other_base_copy._denom) - (other_base_copy._num * this_base._denom);
+	this_base._denom = this_base._denom * other_base_copy._denom;
+	(*this) = this_base;
 	simplify();
 	return (*this);
-};
+}
 BaseFraction& BaseFraction::operator-=(int num) {
-	to_base_fraction();
-	this->_num = _num - (num * _denom);
+	BaseFraction this_base = (*this).to_base_fraction();
+	this_base._num = this_base._num - (num * this_base._denom);
+	(*this) = this_base;
 	simplify();
 	return (*this);
-};
+}
 BaseFraction& BaseFraction::operator*=(const BaseFraction& other) {
-	to_base_fraction();
-	if (other._num == 0) {
-		this->_num = 0;
-		this->_denom = 1;
+	BaseFraction this_base = (*this).to_base_fraction();
+	BaseFraction other_base_copy = other.to_base_fraction();
+	if ((other_base_copy._num == 0)||(this_base._num == 0)) {
+		this_base._num = 0;
+		this_base._denom = 1;
+		(*this) = this_base;
 		return (*this);
 	}
 	else
-		this->_num *= other._num;
-	this->_denom *= other._denom;
+	this_base._num *= other_base_copy._num;
+	this_base._denom *= other_base_copy._denom;
+	(*this) = this_base;
 	simplify();
 	return (*this);
-};
+}
 BaseFraction& BaseFraction::operator*=(int num) {
-	to_base_fraction();
-	if (num == 0) {
-		this->_num = 0;
-		this->_denom = 1;
+	BaseFraction this_base = (*this).to_base_fraction();
+	if ((num == 0)||(this_base._num == 0)) {
+		this_base._num = 0;
+		this_base._denom = 1;
+		(*this) = this_base;
 		return (*this);
 	}
 	else
-		this->_num *= num;
+		this_base._num *= num;
+	(*this) = this_base;
 	simplify();
 	return (*this);
-};
+}
 BaseFraction& BaseFraction::operator/=(const BaseFraction& other) {
-	to_base_fraction();
-	int o_num = other._num;
-	this->_num *= other._denom;
-	if (other._num == 0) {
-		throw std::invalid_argument("Division by zero");
+	BaseFraction this_base = (*this).to_base_fraction();
+	BaseFraction other_base_copy = other.to_base_fraction();
+	if ((other_base_copy._num == 0)) {
+		throw std::domain_error("Division by zero");
 	}
-	if (other._num < 0) {
-		o_num *= -1;
-		_num *= -1;
+	this_base._num *= other_base_copy._denom;
+	if (other_base_copy._num < 0) {//Перенос знака в числитель текущей дроби
+		other_base_copy._num *= -1;
+		this_base._num *= -1;
 	}
-	this->_denom *= o_num;
+	this_base._denom *= other_base_copy._num;
+	(*this) = this_base;
 	simplify();
 	return (*this);
-};
+}
 BaseFraction& BaseFraction::operator/=(int num) {
-	to_base_fraction();
+	BaseFraction this_base = (*this).to_base_fraction();
 	if (num == 0) {
-		throw std::invalid_argument("Division by zero");
+		throw std::domain_error("Division by zero");
 	}
 	if (num < 0) {
 		num *= -1;
-		_num *= -1;
+		this_base._num *= -1;
 	}
-	this->_denom *= num;
+	this_base._denom *= num;
+	(*this) = this_base;
 	simplify();
 	return (*this);
-};
+}
 //Арифметические операторы
 BaseFraction BaseFraction::operator+(int num) const {
 	BaseFraction res(*this);
@@ -300,9 +284,9 @@ bool BaseFraction::operator>=(int num) const {
 bool BaseFraction::operator<=(int num) const {
 	return (((*this) < num) || ((*this) == num));
 }
-//BullandCows сделать приложение читабельным
-//CDate CTime доделать
-//to_base_fraction изменить так чтобы он возращал объект BaseFraction
+//BullandCows сделать приложение читабельным +
+//CDate CTime доделать +
+//to_base_fraction изменить так чтобы он возращал объект BaseFraction 
 //Complex переделать операторы без дублирования
 //Конструктор по строке Complex исправить
 //Добавить перемешивание и сортировку в vector
