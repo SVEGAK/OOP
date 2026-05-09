@@ -76,7 +76,7 @@ public:
 
 	virtual ~BaseFraction();
 
-	//friend std::ostream& operator<<(std::ostream&, const BaseFraction&);
-	//friend std::istream& operator>>(std::istream& in, BaseFraction& frac);
+	friend std::ostream& operator<<(std::ostream&, const BaseFraction&);
+	friend std::istream& operator>>(std::istream& in, BaseFraction& frac);
 
 };

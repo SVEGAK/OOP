@@ -268,7 +268,7 @@ TEST(RightFractionTest, OutputOperator) {
     RightFraction rf(3, 1, 4);
     std::ostringstream oss;
     oss << rf;
-    EXPECT_EQ(oss.str(), "3 1 / 4");
+    EXPECT_EQ(oss.str(), "3 1/4");
 }
 
 TEST(RightFractionTest, InputOperator) {

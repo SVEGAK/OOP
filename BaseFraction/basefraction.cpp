@@ -291,7 +291,22 @@ bool BaseFraction::operator<=(int num) const {
 }
 //BullandCows сделать приложение читабельным +
 //CDate CTime доделать +
-//to_base_fraction изменить так чтобы он возращал объект BaseFraction 
-//Complex переделать операторы без дублирования
+//to_base_fraction изменить так чтобы он возращал объект BaseFraction +
+//Complex переделать операторы без дублирования +
 //Конструктор по строке Complex исправить
 //Добавить перемешивание и сортировку в vector
+
+std::ostream& operator<<(std::ostream& out, const BaseFraction& obj)
+{
+	out << obj._num << "/" << obj._denom;
+	return out;
+}
+
+std::istream& operator>>(std::istream& in, BaseFraction& frac)
+{
+	std::string input_str;
+	std::getline(in >> std::ws, input_str);
+	BaseFraction obj(input_str);
+	frac = std::move(obj);
+	return in;
+}

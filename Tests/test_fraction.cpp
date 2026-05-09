@@ -533,3 +533,47 @@ TEST(ClassFraction, cmp_zero) {
     EXPECT_TRUE(f1 == f2);
     EXPECT_TRUE(f1 == 0);
 }
+
+TEST(BaseFractionIO, OutputPositiveFraction) {
+    BaseFraction f(3, 4);
+    std::ostringstream oss;
+    oss << f;
+    EXPECT_EQ(oss.str(), "3/4");
+}
+
+TEST(BaseFractionIO, OutputNegativeFraction) {
+    BaseFraction f(-5, 8);
+    std::ostringstream oss;
+    oss << f;
+    EXPECT_EQ(oss.str(), "-5/8");
+}
+
+TEST(BaseFractionIO, OutputZeroFraction) {
+    BaseFraction f(0, 5);
+    std::ostringstream oss;
+    oss << f;
+    // при нулевом числителе в конструкторе знаменатель становится 1
+    EXPECT_EQ(oss.str(), "0/1");
+}
+
+TEST(BaseFractionIO, InputValidFraction) {
+    std::istringstream iss("7/12");
+    BaseFraction f;
+    iss >> f;
+    EXPECT_EQ(f.num(), 7);
+    EXPECT_EQ(f.denom(), 12);
+}
+
+TEST(BaseFractionIO, InputWithSpaces) {
+    std::istringstream iss("  2 / 5 "); // пробелы внутри строки
+    BaseFraction f;
+    iss >> f;
+    EXPECT_EQ(f.num(), 2);
+    EXPECT_EQ(f.denom(), 5);
+}
+
+TEST(BaseFractionIO, InputInvalidFormatThrows) {
+    std::istringstream iss("abc");
+    BaseFraction f;
+    EXPECT_THROW(iss >> f, std::invalid_argument);
+}

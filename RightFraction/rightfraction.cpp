@@ -1,31 +1,5 @@
 ﻿#include "rightfraction.h"
 #include <iomanip>
-size_t RightFraction::find_Integer_pos(const std::string& input_str) {//позиция первого пробела после целой части
-    size_t pos_f = input_str.find('/');
-    if (pos_f == std::string::npos) { // если не нашлось, то это скорее всего просто число
-        return (input_str.length());
-
-    }
-    if (pos_f != std::string::npos) {
-        if ((input_str[pos_f - 1] != ' ') && (input_str[pos_f + 1] != ' ')) {
-            throw std::invalid_argument("Invalid format: expected 'Integer num/denom'");
-        }
-        for (size_t i = pos_f - 1; i > 0; i--) {
-            if (input_str[i] == ' ') {
-                return i;
-            }
-        }
-    }
-    return 0; //если такого пробела нет, то нет и целой части
-}
-int RightFraction::parseInteger(const std::string& input_str, size_t pos) {//pos - первый справа пробел от Integer
-    if (pos == 0) {
-        return 0;
-    }
-    return std::stoi(input_str.substr(0, pos));   
-}
-
-
 BaseFraction RightFraction::to_base_fraction() const noexcept
 {
     BaseFraction obj(_num + (_integer * _denom), _denom);
@@ -126,7 +100,7 @@ RightFraction& RightFraction::operator=(const Fraction& other) noexcept
 
 std::ostream& operator<<(std::ostream& out, const RightFraction& obj)
 {
-    out << obj._integer << ' ' << obj._num << " / " << obj._denom;
+    out << obj._integer << ' ' << obj._num << "/" << obj._denom;
     return out;
 }
 

@@ -20,5 +20,4 @@ class Fraction: public BaseFraction{
 	Fraction(const BaseFraction&);//Конструктор преобразования типа
 	//Оператор присваивания с преобразованием
 	Fraction& operator=(const BaseFraction&) noexcept;
-
 };
