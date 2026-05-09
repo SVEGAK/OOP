@@ -354,12 +354,12 @@ TEST(ClassFraction, op_div_int_basic) {
 TEST(ClassFraction, op_div_fraction_by_zero) {
     Fraction f1(1, 2);
     Fraction f2(0, 1);
-    EXPECT_THROW(f1 / f2, std::invalid_argument);
+    EXPECT_THROW(f1 / f2, std::domain_error);
 }
 
 TEST(ClassFraction, op_div_int_by_zero) {
     Fraction f1(3, 4);
-    EXPECT_THROW(f1 / 0, std::invalid_argument);
+    EXPECT_THROW(f1 / 0, std::domain_error);
 }
 
 TEST(ClassFraction, op_chain_arithmetic) {

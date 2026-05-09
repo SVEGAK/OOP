@@ -6,7 +6,10 @@ class Fraction: public BaseFraction{
 	//Служебные функции 
 	int max_delt(int a, int b);//вспомогательная функция для simplify
 	virtual void simplify() noexcept override; // упрощение дроби
-	
+	BaseFraction to_base_fraction() const noexcept override;
+	std::unique_ptr<BaseFraction> clone() const {
+		return std::make_unique<Fraction>(*this);   // создаём новый Fraction как копию *this
+	}
 	public:
 	// Конструкторы
 	Fraction(); // контруктор инициализации по умолчанию
