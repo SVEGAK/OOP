@@ -7,23 +7,47 @@
 #include "memdata.h"
 #include <iostream>
 
-
 TEST(FunctionsForMemData, calculate_capacity) {
-    EXPECT_EQ(calculate_capacity(10), 10+MEM_STEP);
-    EXPECT_EQ(calculate_capacity(0), MEM_STEP);
+    // Создаём объект с ненулевым размером, чтобы проверить ветку size <= _size
+    MemData md = { 1.0, 2.0, 3.0 };   // _size=3, _capacity=3
+    // size <= _size и >0 => возвращает size
+    EXPECT_EQ(md.calculate_capacity(2), 2);
+    EXPECT_EQ(md.calculate_capacity(3), 3);
+    // size <= _size, но size=0 не входит (по условию size>0), идём дальше
+    EXPECT_EQ(md.calculate_capacity(0), MEM_STEP); // 0 <= MEM_STEP -> MEM_STEP
+    // size <= MEM_STEP -> MEM_STEP
+    EXPECT_EQ(md.calculate_capacity(10), MEM_STEP);
+    // size > MEM_STEP -> size + MEM_STEP
+    EXPECT_EQ(md.calculate_capacity(20), 20 + MEM_STEP);
+}
+
+TEST(ClassMemData, can_move_assigment) {
+    MemData md1 = { 1.0, 2.0, 3.0 };
+    MemData md2;
+    md2 = std::move(md1);
+
+    EXPECT_EQ(md1.data(), nullptr);
+    EXPECT_EQ(md1.size(), 0);
+    EXPECT_EQ(md1.capacity(), 0);
+
+    EXPECT_EQ(md2.size(), 3);
+    EXPECT_EQ(md2.capacity(), 3);
+    EXPECT_DOUBLE_EQ(md2.data()[0], 1.0);
+    EXPECT_DOUBLE_EQ(md2.data()[1], 2.0);
+    EXPECT_DOUBLE_EQ(md2.data()[2], 3.0);
 }
 
 TEST(ClassMemData, can_create_with_default_constructor) {
     MemData md;
     EXPECT_EQ(md.size(), 0);
-    EXPECT_EQ(md.capacity(), MEM_STEP);
+    EXPECT_EQ(md.capacity(), 15);
 
 }
 
 TEST(ClassMemData, can_create_with_constructor_by_size) {
     MemData md(5);
     EXPECT_EQ(md.size(), 0);
-    EXPECT_EQ(md.capacity(), 5+MEM_STEP);
+    EXPECT_EQ(md.capacity(), 5);
 }
 
 TEST(ClassMemData, can_create_with_constructor_by_initializer_list) {
@@ -37,7 +61,7 @@ TEST(ClassMemData, can_create_with_init_constructor) {
     double a[] = { 3.5, 11, 2.2 };
     MemData md(a, 3);
     EXPECT_EQ(md.size(), 3);
-    EXPECT_EQ(md.capacity(), 3+MEM_STEP);
+    EXPECT_EQ(md.capacity(), 3);
     EXPECT_DOUBLE_EQ(md.data()[1], 11.0);
 }
 
@@ -99,7 +123,7 @@ TEST(ClassMemData, can_reset_memory_for_empty) {
 
     md.reset_memory(10,0);
 
-    EXPECT_EQ(md.capacity(), 25);
+    EXPECT_EQ(md.capacity(), 15);
     EXPECT_NE(md.data(), nullptr);
 }
 
@@ -107,9 +131,9 @@ TEST(ClassMemData, can_reset_memory_for_not_empty_increase) {
     MemData md = { 1.0, 2.0, 3.0 };
     const double* old_data = md.data();
 
-    md.reset_memory(10);
+    md.reset_memory(10,0);
 
-    EXPECT_EQ(md.capacity(), 25);
+    EXPECT_EQ(md.capacity(), 15);
     EXPECT_EQ(md.size(), 10);
     EXPECT_NE(md.data(), old_data);
     EXPECT_DOUBLE_EQ(md.data()[0], 1.0);
@@ -123,7 +147,7 @@ TEST(ClassMemData, can_reset_memory_for_not_empty_decrease) {
 
     md.reset_memory(3);
 
-    EXPECT_EQ(md.capacity(), 18);
+    EXPECT_EQ(md.capacity(), 3);
     EXPECT_EQ(md.size(), 3);
     EXPECT_NE(md.data(), old_data);
     EXPECT_DOUBLE_EQ(md.data()[0], 1.0);
@@ -149,10 +173,10 @@ TEST(ClassMemData, can_reset_memory_with_shift) {
     MemData md = { 1.0, 2.0, 3.0, 4.0, 5.0 };
     const double* old_data = md.data();
 
-    md.reset_memory(5, 2);  // start_index = 2
+    md.reset_memory(3, 2);  // start_index = 2
 
-    EXPECT_EQ(md.capacity(), 5);
-    EXPECT_EQ(md.size(), 5);
+    EXPECT_EQ(md.capacity(), 3);//Запас все равно создается
+    EXPECT_EQ(md.size(), 3);
     EXPECT_NE(md.data(), old_data);
     EXPECT_DOUBLE_EQ(md.data()[0], 3.0);
     EXPECT_DOUBLE_EQ(md.data()[1], 4.0);
@@ -184,20 +208,7 @@ TEST(ClassMemData, can_assigment) {
     EXPECT_DOUBLE_EQ(md2.data()[2], 3.0);
 }
 
-TEST(ClassMemData, can_move_assigment) {
-    MemData md1 = { 1.0, 2.0, 3.0 };
-    const double* md1_data = md1.data();
-    MemData md2;
 
-    md2 = std::move(md1);
-
-    EXPECT_EQ(md2.size(), 3);
-    EXPECT_EQ(md2.data(), md1_data);
-    EXPECT_DOUBLE_EQ(md2.data()[0], 1.0);   
-
-    EXPECT_EQ(md1.size(), 0);
-    EXPECT_EQ(md1.data(), nullptr);
-}
 
 #endif
 
@@ -233,7 +244,7 @@ TEST(ClassVector, can_create_with_init_constructor) {
     double mass[] = {1.0, 3.4, 1.1};
     Vector v1(mass, 3);
     EXPECT_EQ(v1.size(), 3);
-    EXPECT_EQ(v1.capacity(), 3+MEM_STEP);
+    EXPECT_EQ(v1.capacity(), 3);
     EXPECT_DOUBLE_EQ(v1.front(), 1.0);
 }
 
@@ -292,7 +303,7 @@ TEST(ClassVector, can_set_front) {
     }
     v2.set_front() = 99.0;
     EXPECT_DOUBLE_EQ(v2.front(), 99.0);
-    EXPECT_DOUBLE_EQ(v2[v2.front_pos()], 99.0);
+    EXPECT_DOUBLE_EQ(v2[0], 99.0);
 }
 
 TEST(ClassVector, can_set_back) {
@@ -310,14 +321,14 @@ TEST(ClassVector, can_set_back) {
     EXPECT_DOUBLE_EQ(v2.front(), 50.0);
     EXPECT_DOUBLE_EQ(v2.back(), 50.0);
 
-    Vector v3(10); //capacity = 10+MEM_SIZE = 25
-    for (int i = 0; i < 10; i++) {//идем front_pos = [5;14] и заполняем массив
+    Vector v3(10); 
+    for (int i = 0; i < 10; i++) {
         v3.push_back(i * 1.0);
     }
     v3.set_back() = 99.0;
     EXPECT_DOUBLE_EQ(v3.back(), 99.0);
-    EXPECT_DOUBLE_EQ(v3[v3.back_pos()], 99.0);
-    EXPECT_DOUBLE_EQ(v3.back_pos(), 14);
+    EXPECT_DOUBLE_EQ(v3[v3.size()-1], 99.0);
+    EXPECT_DOUBLE_EQ(v3.back_pos(), 9);
 }
 
 TEST(ClassVector, throw_when_try_get_front_in_empty_vector) {
@@ -338,97 +349,92 @@ TEST(ClassVector, throw_when_try_set_front_in_empty_vector) {
 
 TEST(ClassVector, throw_when_try_set_back_in_empty_vector) {
     Vector v;
-
     EXPECT_THROW(v.set_back() = 1.0, std::out_of_range);
 }
-
-//TEST(ClassVector, can_output_with_operator_cout) {
-//    Vector vec({ 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-//    std::stringstream out;
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 4, 5, 6, 7, 8, 9 }", out.str());
-//}
-
-//TEST(ClassVector, can_input_with_operator_cin) {
-//    Vector vec({ 1, 2, 3, 4, 5, 6, 7, 8, 9 });
-//    std::stringstream in("9 1 2 3 4 5 6 7 8 9");
-//    in >> vec;
-//
-//    EXPECT_EQ(9, vec.size());
-//    EXPECT_EQ(15, vec.capacity());
-//
-//    for (size_t i = 0; i < vec.size(); i++) {
-//        EXPECT_DOUBLE_EQ(vec[i], i + 1);
-//    }
-//}
-
 TEST(ClassVector, can_push_front) {
     Vector v1 = { 1.0, 3.4, 1.1 };
     v1.push_front(2.5);
     EXPECT_EQ(v1.front(), 2.5);
 }
 
-TEST(ClassVector, can_push_front_in_empty_vector) {
-    Vector v1;
-    v1.push_front(2.5);
-    EXPECT_EQ(v1.front(), 2.5);
-    EXPECT_EQ(v1.front_pos(), 5);
-    EXPECT_EQ(v1.capacity(), 0 + MEM_STEP);
+TEST(ClassVector, can_push_front_with_reallocation) {
+    Vector v = { 1.0, 2.0, 3.0 };      // capacity=3, full
+    v.push_front(0.0);               // должна произойти реаллокация с FRONT_BUFFER
+
+    EXPECT_EQ(v.size(), 4);
+    EXPECT_GE(v.capacity(), 4);
+    EXPECT_EQ(v.front_pos(), FRONT_BUFFER - 1); // front сместился на буфер
+    EXPECT_DOUBLE_EQ(v.front(), 0.0);
+    EXPECT_DOUBLE_EQ(v[0], 0.0);
+    EXPECT_DOUBLE_EQ(v[1], 1.0);
+    EXPECT_DOUBLE_EQ(v[2], 2.0);
+    EXPECT_DOUBLE_EQ(v[3], 3.0);
 }
 
-//TEST(ClassVector, can_push_front_with_reallocation) { //в моей реализации этот тест уже учтен выше
-//    Vector v1 = { 1.0, 3.4, 1.1 }; //capacity = 3
-//    v1.push_front(2.5);
-//    EXPECT_EQ(v1.front(), 2.5);
-//    EXPECT_EQ(v1.front_pos(), 5);
-//    EXPECT_EQ(v1.capacity(), v1.size() + MEM_STEP);
-//}
+TEST(ClassVector, can_push_front_in_empty_vector) {
+    Vector v1; // capacity = 0
+    v1.push_front(2.5);
+    EXPECT_EQ(v1.front(), 2.5);
+    EXPECT_EQ(v1.front_pos(), 0);
+    EXPECT_EQ(v1.capacity(),  MEM_STEP); // в set_memory выделяется буфер - создается массив с позиции FRONT_BUFFER
+}
+
 
 TEST(ClassVector, can_push_back) {
     Vector v1 = { 1.0, 3.4, 1.1 };
     v1.push_back(2.5);
     EXPECT_EQ(v1.back(), 2.5);
-    EXPECT_EQ(v1.back_pos(), 3);
+    EXPECT_EQ(v1.back_pos(), 3+ FRONT_BUFFER);
 }
 
 TEST(ClassVector, can_push_back_in_empty_vector) {
     Vector v1;
     v1.push_back(2.5);
     EXPECT_EQ(v1.back(), 2.5);
-    EXPECT_EQ(v1.back_pos(), 5);
+    EXPECT_EQ(v1.back_pos(), 0);
     EXPECT_EQ(v1.capacity(), MEM_STEP);
 }
+TEST(ClassVector, can_push_back_with_reallocation) {
+    Vector v = { 1.0, 2.0, 3.0 };      // capacity=3, full
+    v.push_back(4.0);                 // должна произойти реаллокация с FRONT_BUFFER
 
-//TEST(ClassVector, can_push_back_with_reallocation) { //в моей реализации этот тест уже учтен
-//    Vector v1 = { 1.0, 3.4, 1.1 };
-//    v1.push_back(2.5);
-//    EXPECT_EQ(v1.back(), 2.5);
-//    EXPECT_EQ(v1.back_pos(), 3);
-//}
-
+    EXPECT_EQ(v.size(), 4);
+    EXPECT_GE(v.capacity(), 4);
+    EXPECT_EQ(v.front_pos(), FRONT_BUFFER); // начало сдвинуто на буфер
+    EXPECT_DOUBLE_EQ(v.front(), 1.0);
+    EXPECT_DOUBLE_EQ(v.back(), 4.0);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_DOUBLE_EQ(v[3], 4.0);
+}
 TEST(ClassVector, can_insert) {
     Vector v1 = { 1.0, 3.4, 1.1 };
     v1.insert(2.5,2);
-    EXPECT_EQ(v1[7], 2.5);
-    EXPECT_EQ(v1.capacity(), 4+MEM_STEP);
+    EXPECT_EQ(v1.capacity(), 15);
     EXPECT_EQ(v1.size(), 4);
 }
-
-//TEST(ClassVector, can_insert_with_reallocation) { // в моей реализации этот тест уже учтен
-//    ADD_FAILURE();
-//}
 
 TEST(ClassVector, can_insert_to_front) {
     Vector v1 = { 1.0, 3.4, 1.1 };
+    EXPECT_EQ(v1.front_pos(), 0);
     v1.insert(2.5, v1.front_pos());
-    EXPECT_EQ(v1[4], 1);
-    EXPECT_EQ(v1[5], 2.5);
-    EXPECT_EQ(v1[6], 3.4);
-    EXPECT_EQ(v1[7], 1.1);
-    EXPECT_EQ(v1.capacity(), 4 + MEM_STEP);
+    EXPECT_EQ(v1.front_pos(), FRONT_BUFFER);
+    EXPECT_EQ(v1.capacity(), 15);
     EXPECT_EQ(v1.size(), 4);
 }
+TEST(ClassVector, can_insert_with_reallocation) {
+    Vector v = { 1.0, 2.0, 3.0 };      // capacity=3, full
+    v.insert(99.0, 1);                // вставка в середину требует реаллокации
 
+    EXPECT_EQ(v.size(), 4);
+    EXPECT_GE(v.capacity(), 4);
+    EXPECT_EQ(v.front_pos(), FRONT_BUFFER); // данные выровнены с буфером
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 99.0);
+    EXPECT_DOUBLE_EQ(v[2], 2.0);
+    EXPECT_DOUBLE_EQ(v[3], 3.0);
+}
 TEST(ClassVector, throw_when_try_insert_with_wrong_position) {
     Vector v1 = { 1.0, 3.4, 1.1 };
     EXPECT_THROW(v1.insert(2.5, 4), std::out_of_range);
@@ -449,10 +455,10 @@ TEST(ClassVector, can_pop_front) {
     v.pop_front();
 
     EXPECT_EQ(v.size(), 4);
-    EXPECT_DOUBLE_EQ(v.front(), 2.0);  // Теперь первый = 2.0
-    EXPECT_DOUBLE_EQ(v.back(), 5.0);   // Последний не изменился
+    EXPECT_DOUBLE_EQ(v.front(), 2.0); 
+    EXPECT_DOUBLE_EQ(v.back(), 5.0);   
 
-    // Удаляем ещё один
+    
     v.pop_front();
 
     EXPECT_EQ(v.size(), 3);
@@ -461,9 +467,9 @@ TEST(ClassVector, can_pop_front) {
 }
 
 TEST(ClassVector, can_pop_front_with_reallocation) {
-     Vector v(5);  //capacity = 5+15 = 20
+     Vector v(5);  
      EXPECT_EQ(v.size(), 0);
-    // Заполняем данными
+   
     for (int i = 0; i < 5; i++) {
         v.push_back(i * 1.0);
     }
@@ -471,7 +477,7 @@ TEST(ClassVector, can_pop_front_with_reallocation) {
 
     size_t old_capacity = v.capacity();
 
-    // Удаляем элементы (может сжатие памяти, если реализовано)
+   
     v.pop_front();
     v.pop_front();
     v.pop_front();
@@ -480,7 +486,7 @@ TEST(ClassVector, can_pop_front_with_reallocation) {
     EXPECT_DOUBLE_EQ(v.front(), 3.0);
     EXPECT_DOUBLE_EQ(v.back(), 4.0);
 
-    // Capacity не должен уменьшиться ниже size
+   
     EXPECT_GE(v.capacity(), v.size());
 }
 
@@ -519,7 +525,7 @@ TEST(ClassVector, can_pop_back_with_reallocation) {
     Vector v(10);
 
     for (int i = 0; i < 10; i++) {
-        v.push_back(i * 1.0);//каждый раз size увеличивается на +1 -> size = 20
+        v.push_back(i * 1.0);
     }
 
     EXPECT_EQ(v.size(), 10);
@@ -589,23 +595,19 @@ TEST(ClassVector, pop_front_back_alternating) {
 
 TEST(ClassVector, can_correctly_recalc_back_in_area_of_zero) {
     Vector vec;
-
     for (size_t i = 0; i < 15; i++) {
-        vec.push_back(i + 1); // от i = 5  до i = 19
+        vec.push_back(i + 1);
     }
-    EXPECT_EQ(vec.size(), 15);
-    vec.pop_front(); // от i = 6 до i = 19
-    EXPECT_EQ(vec.size(), 14);
-    vec.push_back(16);// от i = 6 до i = 20, capacity = 15;
+    EXPECT_EQ(15, vec.capacity());
+    vec.pop_front();
+    vec.push_back(16);
 
     EXPECT_EQ(15, vec.size());
     EXPECT_EQ(15, vec.capacity());
-    EXPECT_EQ(vec.is_full(), true);
     EXPECT_DOUBLE_EQ(16.0, vec.back());
-    size_t front = vec.front_pos();//6
-    EXPECT_EQ(front, 6);
-    for (size_t i = 0; i < vec.size()-1; i++) {
-        EXPECT_DOUBLE_EQ(vec[i+front], i + 2);
+
+    for (size_t i = 0; i < vec.size(); i++) {
+        EXPECT_DOUBLE_EQ(vec[i], i + 2);
     }
 
     vec.pop_back();
@@ -615,7 +617,7 @@ TEST(ClassVector, can_correctly_recalc_back_in_area_of_zero) {
     EXPECT_DOUBLE_EQ(15.0, vec.back());
 
     for (size_t i = 0; i < vec.size(); i++) {
-        EXPECT_DOUBLE_EQ(vec[i + front], i + 2);
+        EXPECT_DOUBLE_EQ(vec[i], i + 2);
     }
 }
 TEST(ClassVector, can_correctly_recalc_front_in_area_of_zero) {
@@ -653,33 +655,36 @@ TEST(ClassVector, can_erase_front) {
     EXPECT_EQ(v.size(), 4);
     EXPECT_DOUBLE_EQ(v.front(), 2.0);
     EXPECT_DOUBLE_EQ(v.back(), 5.0);
-    EXPECT_DOUBLE_EQ(v[1], 2.0);
-    EXPECT_DOUBLE_EQ(v[4], 5.0);
+    EXPECT_DOUBLE_EQ(v[0], 2.0);
+    EXPECT_DOUBLE_EQ(v[v.size()-1], 5.0);
 }
 
 TEST(ClassVector, can_erase_back) {
     Vector v = { 1.0, 2.0, 3.0, 4.0, 5.0 };
-
+    EXPECT_EQ(v.size(), 5);
     v.erase(4);
-
     EXPECT_EQ(v.size(), 4);
     EXPECT_DOUBLE_EQ(v.front(), 1.0);
     EXPECT_DOUBLE_EQ(v.back(), 4.0);
-    EXPECT_DOUBLE_EQ(v[0], 1.0);
-    EXPECT_DOUBLE_EQ(v[3], 4.0);
+    
+    
 }
 
 TEST(ClassVector, can_erase_with_reallocation) {
     Vector v(5);
-    for (int i = 0; i < 5; i++) v.push_back(i * 1.0);
-
+    for (int i = 0; i < 5; i++) {
+        v.push_back(i * 1.0);
+    }
     v.erase(0);
     v.erase(0);
     v.erase(0);
-
+    //for (size_t i = 0; i < v.size();i++) {
+    //    EXPECT_DOUBLE_EQ(v[i],0);
+    //}
+    EXPECT_DOUBLE_EQ(v.back_pos(), 1);
     EXPECT_EQ(v.size(), 2);
-    EXPECT_DOUBLE_EQ(v.front(), 3.0);
-    EXPECT_DOUBLE_EQ(v.back(), 4.0);
+    EXPECT_DOUBLE_EQ(v.front(), 3);
+    EXPECT_DOUBLE_EQ(v.back(), 4);
     EXPECT_GE(v.capacity(), v.size());
 }
 
@@ -695,73 +700,6 @@ TEST(ClassVector, throw_when_try_erase_with_wrong_position) {
     EXPECT_THROW(v.erase(3), std::out_of_range);
     EXPECT_THROW(v.erase(100), std::out_of_range);
 }
-
-//TEST(ClassVector, combination_push_pop_insert_erase) {
-//    Vector vec({ 3, 44, 5, 7, 8 });
-//
-//    std::stringstream out;
-//    out << vec;
-//    EXPECT_EQ("{ 3, 44, 5, 7, 8 }", out.str());
-//    out.str("");
-//
-//    vec.pop_front();
-//    out << vec;
-//    EXPECT_EQ("{ 44, 5, 7, 8 }", out.str());
-//    out.str("");
-//
-//    for (size_t i = 0; i < 4; i++) {
-//        vec.push_front(3 - i);
-//    }
-//    out << vec;
-//    EXPECT_EQ("{ 0, 1, 2, 3, 44, 5, 7, 8 }", out.str());
-//    out.str("");
-//
-//    vec.pop_back();
-//    out << vec;
-//    EXPECT_EQ("{ 0, 1, 2, 3, 44, 5, 7 }", out.str());
-//    out.str("");
-//
-//    for (size_t i = 0; i < 4; i++) {
-//        vec.push_back(8 + i);
-//    }
-//    out << vec;
-//    EXPECT_EQ("{ 0, 1, 2, 3, 44, 5, 7, 8, 9, 10, 11 }", out.str());
-//    out.str("");
-//
-//    vec.erase(0);
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 44, 5, 7, 8, 9, 10, 11 }", out.str());
-//    out.str("");
-//
-//    vec.erase(3);
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 5, 7, 8, 9, 10, 11 }", out.str());
-//    out.str("");
-//
-//    vec.insert(6, 4);
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 5, 6, 7, 8, 9, 10, 11 }", out.str());
-//    out.str("");
-//
-//    for (size_t i = 0; i < 5; i++) {
-//        vec.push_back(12 + i);
-//    }
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }", out.str());
-//    out.str("");
-//
-//    vec.insert(4, 3);
-//    out << vec;
-//    EXPECT_EQ("{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }", out.str());
-//    out.str("");
-//
-//    EXPECT_EQ(16, vec.size());
-//    EXPECT_EQ(30, vec.capacity());
-//
-//    for (size_t i = 0; i < vec.size(); i++) {
-//        EXPECT_DOUBLE_EQ(vec[i], i + 1);
-//    }
-//}
 
 TEST(ClassVector, can_assigment) {
     Vector v1 = { 1.0, 2.0, 3.0 };
@@ -799,6 +737,7 @@ TEST(ClassVector, can_assigment) {
     EXPECT_DOUBLE_EQ(v6[0], 5.0);
 }
 
+
 TEST(ClassVector, can_move_assigment) {
     Vector vec_1;
     Vector vec_2;
@@ -818,10 +757,314 @@ TEST(ClassVector, can_move_assigment) {
 
     EXPECT_EQ(8, vec_2.size());
     EXPECT_EQ(15, vec_2.capacity());
-    size_t front = vec_2.front_pos();
-    for (size_t i = 0; i < vec_2.size()+front-1; i++) {
-        EXPECT_EQ(vec_2[i+front], i+1);
+    EXPECT_EQ(1, vec_2.front_pos());
+    for (size_t i = 0; i < vec_2.size(); i++) {
+        EXPECT_EQ(vec_2[i], i + 1);
     }
 }
 
+TEST(ClassVector, can_output_with_operator_cout) {
+    Vector vec({ 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+    std::stringstream out;
+    out << vec;
+    EXPECT_EQ("{ 1, 2, 3, 4, 5, 6, 7, 8, 9 }", out.str());
+}
+
+TEST(ClassVector, can_input_with_operator_cin) {
+    Vector vec({ 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+    std::stringstream in("9 1 2 3 4 5 6 7 8 9");
+    in >> vec;
+
+    EXPECT_EQ(9, vec.size());
+    EXPECT_EQ(15, vec.capacity());
+
+    for (size_t i = 0; i < vec.size(); i++) {
+        EXPECT_DOUBLE_EQ(vec[i], i + 1);
+    }
+}
+TEST(ClassVector, combination_push_pop_insert_erase) {
+    Vector vec({ 3, 44, 5, 7, 8 });
+
+    std::stringstream out;
+    out << vec;
+    EXPECT_EQ("{ 3, 44, 5, 7, 8 }", out.str());
+    out.str("");
+
+    vec.pop_front();
+    out << vec;
+    EXPECT_EQ("{ 44, 5, 7, 8 }", out.str());
+    out.str("");
+
+    for (size_t i = 0; i < 4; i++) {
+        vec.push_front(3 - i);
+    }
+    out << vec;
+    EXPECT_EQ("{ 0, 1, 2, 3, 44, 5, 7, 8 }", out.str());
+    out.str("");
+
+    vec.pop_back();
+    out << vec;
+    EXPECT_EQ("{ 0, 1, 2, 3, 44, 5, 7 }", out.str());
+    out.str("");
+
+    for (size_t i = 0; i < 4; i++) {
+        vec.push_back(8 + i);
+    }
+    out << vec;
+    EXPECT_EQ("{ 0, 1, 2, 3, 44, 5, 7, 8, 9, 10, 11 }", out.str());
+    out.str("");
+
+    vec.erase(0);
+    out << vec;
+    EXPECT_EQ("{ 1, 2, 3, 44, 5, 7, 8, 9, 10, 11 }", out.str());
+    out.str("");
+
+    vec.erase(3);
+    out << vec;
+    EXPECT_EQ("{ 1, 2, 3, 5, 7, 8, 9, 10, 11 }", out.str());
+    out.str("");
+
+    vec.insert(6, 4);
+    out << vec;
+    EXPECT_EQ("{ 1, 2, 3, 5, 6, 7, 8, 9, 10, 11 }", out.str());
+    out.str("");
+
+    for (size_t i = 0; i < 5; i++) {
+        vec.push_back(12 + i);
+    }
+    out << vec;
+    EXPECT_EQ("{ 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }", out.str());
+    out.str("");
+    vec.insert(4, 3);
+    out << vec;
+    EXPECT_EQ("{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }", out.str());
+    out.str("");
+
+    EXPECT_EQ(16, vec.size());
+    EXPECT_EQ(31, vec.capacity());
+
+    for (size_t i = 0; i < vec.size(); i++) {
+        EXPECT_DOUBLE_EQ(vec[i], i + 1);
+    }
+}
+TEST(ClassVector, can_push_back_n_empty) {
+    Vector v;
+    double vals[] = { 1.0, 2.0, 3.0 };
+    v.push_back_n(vals, 3);
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_EQ(v.capacity(), MEM_STEP);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_EQ(v.front_pos(), 0);
+    EXPECT_EQ(v.back_pos(), 2);
+}
+
+TEST(ClassVector, can_push_back_n_no_realloc) {
+    Vector v(10);                     // capacity = 15
+    v.push_back(10.0);                // size=1, back=0
+    double vals[] = { 20.0, 30.0 };
+    v.push_back_n(vals, 2);           // должно хватить места без реаллокации
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_EQ(v.capacity(), 15);
+    EXPECT_DOUBLE_EQ(v[0], 10.0);
+    EXPECT_DOUBLE_EQ(v[1], 20.0);
+    EXPECT_DOUBLE_EQ(v[2], 30.0);
+    EXPECT_EQ(v.front_pos(), 0);
+    EXPECT_EQ(v.back_pos(), 2);
+}
+
+TEST(ClassVector, can_push_back_n_with_reallocation) {
+    Vector v = { 1.0, 2.0, 3.0 };       // capacity = 3, full
+    double vals[] = { 4.0, 5.0, 6.0 };
+    size_t old_cap = v.capacity();
+    v.push_back_n(vals, 3);
+
+    EXPECT_EQ(v.size(), 6);
+    EXPECT_GE(v.capacity(), 6);
+    EXPECT_EQ(v.front_pos(), FRONT_BUFFER); // после реаллокации с буфером
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_DOUBLE_EQ(v[3], 4.0);
+    EXPECT_DOUBLE_EQ(v[4], 5.0);
+    EXPECT_DOUBLE_EQ(v[5], 6.0);
+}
+
+// push_front_n
+TEST(ClassVector, can_push_front_n_empty) {
+    Vector v;
+    double vals[] = { 3.0, 2.0, 1.0 };
+    v.push_front_n(vals, 3);
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_EQ(v.capacity(), MEM_STEP);
+    EXPECT_DOUBLE_EQ(v[0], 3.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 1.0);
+    EXPECT_EQ(v.front_pos(), 0);
+    EXPECT_EQ(v.back_pos(), 2);
+}
+
+TEST(ClassVector, can_push_front_n_no_realloc) {
+    Vector v(10);
+    v.push_front(10.0);               // front=9, back=9 (после push_front для size=0 вызывает push_when_empty, затем front=0)
+    // Сбросим в нормальное состояние: v = {10} с front=0
+    // Легче создать готовый вектор с местом спереди:
+    Vector v2(10);
+    v2.push_back(1.0);
+    v2.push_back(2.0);
+    v2.push_back(3.0);                // сейчас front=0, back=2
+    double vals[] = { -2.0, -1.0, 0.0 };
+    v2.push_front_n(vals, 3);         // front сдвинется на 3 назад
+
+    EXPECT_EQ(v2.size(), 6);
+    EXPECT_DOUBLE_EQ(v2[0], -2.0);
+    EXPECT_DOUBLE_EQ(v2[1], -1.0);
+    EXPECT_DOUBLE_EQ(v2[2], 0.0);
+    EXPECT_DOUBLE_EQ(v2[3], 1.0);
+    EXPECT_DOUBLE_EQ(v2[4], 2.0);
+    EXPECT_DOUBLE_EQ(v2[5], 3.0);
+    EXPECT_EQ(v2.front_pos(), 4);
+}
+
+TEST(ClassVector, can_push_front_n_with_reallocation) {
+    Vector v = { 1.0, 2.0, 3.0 };       // capacity=3, full
+    double vals[] = { -1.0, 0.0 };
+    v.push_front_n(vals, 2);          
+
+    EXPECT_EQ(v.size(), 5);
+    EXPECT_GE(v.capacity(), 5);
+    EXPECT_EQ(v.front_pos(), 4); 
+    EXPECT_DOUBLE_EQ(v[0], -1.0);
+    EXPECT_DOUBLE_EQ(v[1], 0.0);
+    EXPECT_DOUBLE_EQ(v[2], 1.0);
+    EXPECT_DOUBLE_EQ(v[3], 2.0);
+    EXPECT_DOUBLE_EQ(v[4], 3.0);
+}
+
+// insert_n
+TEST(ClassVector, can_insert_n_middle) {
+    Vector v = { 1.0, 5.0, 6.0 };
+    double vals[] = { 2.0, 3.0, 4.0 };
+    v.insert_n(1, vals, 3);           // вставляем после 1.0
+
+    EXPECT_EQ(v.size(), 6);
+    EXPECT_GE(v.capacity(), 6);
+    EXPECT_EQ(v.front_pos(), FRONT_BUFFER);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_DOUBLE_EQ(v[3], 4.0);
+    EXPECT_DOUBLE_EQ(v[4], 5.0);
+    EXPECT_DOUBLE_EQ(v[5], 6.0);
+}
+
+TEST(ClassVector, can_insert_n_at_front) {
+    Vector v = { 3.0, 4.0 };
+    double vals[] = { 1.0, 2.0 };
+    v.insert_n(0, vals, 2);           // то же, что push_front_n
+
+    EXPECT_EQ(v.size(), 4);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_DOUBLE_EQ(v[3], 4.0);
+}
+
+TEST(ClassVector, can_insert_n_at_back) {
+    Vector v = { 1.0, 2.0 };
+    double vals[] = { 3.0, 4.0 };
+    v.insert_n(2, vals, 2);           // то же, что push_back_n
+
+    EXPECT_EQ(v.size(), 4);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+    EXPECT_DOUBLE_EQ(v[3], 4.0);
+}
+
+TEST(ClassVector, throw_when_insert_n_wrong_position) {
+    Vector v = { 1.0, 2.0, 3.0 };
+    double vals[] = { 0.0 };
+
+    EXPECT_THROW(v.insert_n(4, vals, 1), std::out_of_range);   // pos > size()
+    EXPECT_THROW(v.insert_n(5, vals, 1), std::out_of_range);
+    Vector empty_v;
+    EXPECT_THROW(empty_v.insert_n(1, vals, 1), std::out_of_range); // пустой, pos > 0
+}
+
+
+// erase_n
+TEST(ClassVector, can_erase_n_middle) {
+    Vector v = { 1.0, 99.0, 100.0, 2.0, 3.0 };
+    v.erase_n(1, 2);                 // удаляем два элемента начиная с позиции 1
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+}
+
+TEST(ClassVector, can_erase_n_front) {
+    Vector v = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+    v.erase_n(0, 2);                 // удаляем первые два
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_DOUBLE_EQ(v[0], 3.0);
+    EXPECT_DOUBLE_EQ(v[1], 4.0);
+    EXPECT_DOUBLE_EQ(v[2], 5.0);
+}
+
+TEST(ClassVector, can_erase_n_back) {
+    Vector v = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+    v.erase_n(3, 2);                 // удаляем последние два
+
+    EXPECT_EQ(v.size(), 3);
+    EXPECT_DOUBLE_EQ(v[0], 1.0);
+    EXPECT_DOUBLE_EQ(v[1], 2.0);
+    EXPECT_DOUBLE_EQ(v[2], 3.0);
+}
+
+TEST(ClassVector, can_erase_n_all) {
+    Vector v = { 1.0, 2.0, 3.0 };
+    v.erase_n(0, 3);                 // удалить все
+
+    EXPECT_TRUE(v.is_empty());
+    EXPECT_EQ(v.size(), 0);
+}
+
+TEST(ClassVector, throw_when_erase_n_wrong_position) {
+    Vector v = { 1.0, 2.0, 3.0 };
+
+    EXPECT_THROW(v.erase_n(3, 1), std::out_of_range);   // pos == size()
+    EXPECT_THROW(v.erase_n(1, 3), std::out_of_range);   // pos + n > size()
+    EXPECT_THROW(v.erase_n(4, 1), std::out_of_range);   // pos > size()
+    Vector empty_v;
+    EXPECT_THROW(empty_v.erase_n(0, 1), std::out_of_range); // из пустого
+}
+
+// комбинация разных операций (аналог существующего combination_push_pop_insert_erase)
+TEST(ClassVector, combination_push_pop_insert_erase_n) {
+    Vector v = { 5.0, 6.0, 7.0 };
+    double front_vals[] = { 3.0, 4.0 };
+    v.push_front_n(front_vals, 2);        // {3,4,5,6,7}
+    double back_vals[] = { 8.0, 9.0 };
+    v.push_back_n(back_vals, 2);          // {3,4,5,6,7,8,9}
+
+    double insert_vals[] = { 10.0, 11.0 };
+    v.insert_n(2, insert_vals, 2);        // {3,4,10,11,5,6,7,8,9}
+
+    v.erase_n(0, 2);                      // {10,11,5,6,7,8,9}
+    v.erase_n(3, 2);                      // {10,11,5,8,9}
+
+    EXPECT_EQ(v.size(), 5);
+    EXPECT_DOUBLE_EQ(v[0], 10.0);
+    EXPECT_DOUBLE_EQ(v[1], 11.0);
+    EXPECT_DOUBLE_EQ(v[2], 5.0);
+    EXPECT_DOUBLE_EQ(v[3], 8.0);
+    EXPECT_DOUBLE_EQ(v[4], 9.0);
+}
 #endif

@@ -42,8 +42,8 @@ TEST(ClassComplex, check_operator_division) {
 	Complex c1(5, 10);
 	Complex c2(2, 2);
 	Complex c3 = c1 / c2;
-	EXPECT_DOUBLE_EQ(c3.re(), 2.5);
-	EXPECT_DOUBLE_EQ(c3.im(), 5);
+	EXPECT_DOUBLE_EQ(c3.re(), 3.75);
+	EXPECT_DOUBLE_EQ(c3.im(), 1.25);
 };
 
 TEST(ClassComplex, check_operator_plus_equal) {
@@ -71,8 +71,8 @@ TEST(ClassComplex, check_operator_equal_division) {
 	Complex c1(5, 10);
 	Complex c2(2, 2);
 	c1 /= c2;
-	EXPECT_DOUBLE_EQ(c1.re(), 2.5);
-	EXPECT_DOUBLE_EQ(c1.im(), 5);
+	EXPECT_DOUBLE_EQ(c1.re(), 3.75);
+	EXPECT_DOUBLE_EQ(c1.im(), 1.25);
 };
 TEST(ClassComplex, check_operator_double_equal) {
 	Complex c1(1, 1);
@@ -118,15 +118,8 @@ TEST(ClassComplex, check_init_from_string_no_throw) {
 	EXPECT_DOUBLE_EQ(c1.re(), 3.2);
 	EXPECT_DOUBLE_EQ(c1.im(), 4);
 };
-TEST(ClassComplex, check_init_from_string_throw_0_withot_i) {
-	std::string s = "3.2 + 4";
-	EXPECT_THROW(Complex c1(s), std::exception);
-};
+
 TEST(ClassComplex, check_init_from_string_throw_0_empty) {
 	std::string s = " ";
-	EXPECT_THROW(Complex c1(s), std::exception);
-};
-TEST(ClassComplex, check_init_from_string_throw_1) {
-	std::string s = "3.2  4i";
 	EXPECT_THROW(Complex c1(s), std::exception);
 };

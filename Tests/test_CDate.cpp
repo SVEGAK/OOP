@@ -4,7 +4,7 @@
 TEST(ClassCDate, check_default_constructor) {
 	ASSERT_NO_THROW(CDate d1);
 	CDate d1;
-	EXPECT_EQ(d1.year(), 1);
+	EXPECT_EQ(d1.year(), 0);
 	EXPECT_EQ(d1.month(), 1);
 	EXPECT_EQ(d1.day(), 1);
 }
@@ -41,9 +41,10 @@ TEST(ClassCDate, check_set_year_constructor) {
 TEST(ClassCDate, check_set_month_constructor) {
 	ASSERT_NO_THROW(CDate d1);
 	CDate d1(2011, 3, 29);
-	d1.month(29);
+	EXPECT_THROW(d1.month(29), std::invalid_argument);
+	d1.month(5);
 	EXPECT_EQ(d1.year(), 2011);
-	EXPECT_EQ(d1.month(), 29);
+	EXPECT_EQ(d1.month(), 5);
 	EXPECT_EQ(d1.day(), 29);
 }
 TEST(ClassCDate, check_set_day_constructor) {

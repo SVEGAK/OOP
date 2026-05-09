@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 struct Point {
     int x;
     int y;
@@ -12,3 +12,5 @@ struct Circle {
 enum Positions { NOT_RELATED, INTERSECTION, EQUAL, TOUCH, ONE_INSIDE_THE_ANOTHER, NONE };
 
 Positions get_position(Circle C1, Circle C2);
+
+void printInDoubleFrame(const std::string& msg);

@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
+
 class BaseFraction {
 
 protected:
@@ -10,11 +12,18 @@ protected:
 	int _num; // Числитель
 	int _denom; // Знаменатель
 	//Служебные функции 
-	int max_delt(int a, int b);//вспомогательная функция для simplify
-	virtual void simplify() noexcept; // упрощение дроби
-	virtual void to_base_fraction() noexcept;
+	virtual void simplify() noexcept;// упрощение дроби
+	virtual BaseFraction to_base_fraction() const noexcept;
 	static int parseNum(const std::string& str);
 	static int parseDenom(const std::string& str);
+	virtual std::unique_ptr<BaseFraction> clone() const {
+		return std::make_unique<BaseFraction>(*this);   // создаём новый BaseFraction как копию *this
+	}
+	//Проблему с simlify() в операторах +-/* решил с помощью функции возвращающей умный указатель
+	virtual void assign(const BaseFraction& other) {//Виртуальная функция для присваивания чтобы 
+		_num = other.num();							//обойти игнорирование поля _integer при присваивании в операторах
+		_denom = other.denom();										
+	}
 
 public:
 	// Конструкторы

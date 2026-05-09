@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{a15d942d-9a30-42ae-8ddb-c8a7b3fc4c25}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -57,7 +57,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>F:\C unn\RightFraction;F:\C unn\Vector;F:\C unn\MemData;F:\C unn\LongNumbers;F:\C unn\Monom;F:\C unn\Fraction;F:\C unn\Date;F:\C unn\Complex;F:\C unn\Time;F:\C unn\BullsAndCows;F:\C unn\GeometryLib;F:\C unn\STL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\BullsAndCows;..\Complex;..\Fraction;..\MemData;..\Vector;..\Monom;..\RightFraction;..\BaseFraction;..\LongNumbers;..\Time;..\STL;..\Date;..\GeometryLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

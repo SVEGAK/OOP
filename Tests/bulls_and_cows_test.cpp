@@ -1,2 +1,2 @@
 #include "pch.h"
-#include "bulls_and_cows.cpp"
+#include "bulls_and_cows.h"

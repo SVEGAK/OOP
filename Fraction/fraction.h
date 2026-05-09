@@ -2,9 +2,14 @@
 #include "basefraction.h"
 
 class Fraction: public BaseFraction{
-	private:
+	protected:
 	//Служебные функции 
-	void simplify() noexcept override; // упрощение дроби
+	int max_delt(int a, int b);//вспомогательная функция для simplify
+	virtual void simplify() noexcept override; // упрощение дроби
+	BaseFraction to_base_fraction() const noexcept override;
+	std::unique_ptr<BaseFraction> clone() const {
+		return std::make_unique<Fraction>(*this);   // создаём новый Fraction как копию *this
+	}
 	public:
 	// Конструкторы
 	Fraction(); // контруктор инициализации по умолчанию
@@ -15,5 +20,4 @@ class Fraction: public BaseFraction{
 	Fraction(const BaseFraction&);//Конструктор преобразования типа
 	//Оператор присваивания с преобразованием
 	Fraction& operator=(const BaseFraction&) noexcept;
-	
 };

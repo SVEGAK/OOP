@@ -16,7 +16,8 @@ public:
 
     inline bool is_empty() const noexcept;          // проверка на пустоту
     inline bool is_full() const noexcept;           // проверка на переполнение
-
+   
+    inline void compress() noexcept;  //сжатие буфера
     inline size_t size() const noexcept;            // геттер размера
     inline size_t capacity() const noexcept;        // геттер вместимости
     inline double front() const;                    // геттер первого элемента
@@ -37,15 +38,21 @@ public:
     void pop_front();                               // удаление элемента из начала
     void pop_back();                                // удаление элемента из конца
     void erase(size_t pos);                         // удаление элемента по позиции
+   
+    
+    Vector& operator=(const Vector& vector) noexcept;            // оператор присваивания
+    Vector& operator=(Vector&& vector) noexcept;                 // оператор присваивания с move-семантикой
 
-    Vector& operator=(const Vector& vector) noexcept;      // оператор присваивания
-    Vector& operator=(Vector&& vector) noexcept;           // оператор присваивания с move-семантикой
+    double operator[](size_t pos) const noexcept;                 // оператор обращения по индексу константный
+    double& operator[](size_t pos) noexcept;                      // оператор обращения по индексу
 
-    double operator[](size_t pos) const noexcept;       // оператор обращения по индексу константный
-    double& operator[](size_t pos) noexcept;            // оператор обращения по индексу
+    friend std::ostream& operator<<(std::ostream&, const Vector&);// вывод
+    friend std::istream& operator>>(std::istream&, Vector&);      // ввод
 
-    friend std::ostream& operator<<(std::ostream&, const Vector&);     // вывод
-    friend std::istream& operator>>(std::istream&, Vector&);           // ввод
+    void push_back_n(const value_type* values, size_t n);         //вставка в конец n элементов
+    void push_front_n(const value_type* values, size_t n);        //вставка в начало n элементов
+    void insert_n(size_t pos, const value_type* values, size_t n);//вставка в позицию pos n элементов
+    void erase_n(size_t pos, size_t n);                           //удаление n элементов
 };
 
 
@@ -56,17 +63,26 @@ inline bool Vector::is_empty() const noexcept
 
 inline bool Vector::is_full() const noexcept
 {
-    return _mem.is_full();
+    if ((_back == (_mem._capacity - 1)) || (_mem.is_full())) { return true; }
+    return false;
+}
+
+inline void Vector::compress() noexcept
+{
+    if (size() <= capacity() / 2) {
+        _mem.reset_memory(size(), _front, 0);
+        _front = 0; _back = size() - 1;
+    }
 }
 
 inline size_t Vector::size() const noexcept
 {
-    return (*this)._mem.size();
+    return _mem.size();
 }
 
 inline size_t Vector::capacity() const noexcept
 {
-    return (*this)._mem.capacity();
+    return _mem.capacity();
 }
 
 inline size_t Vector::front_pos() const
@@ -81,24 +97,22 @@ inline size_t Vector::back_pos() const
 
 inline double Vector::front() const
 {
-    if (_mem.is_empty()) { throw std::out_of_range("Buffer ring is empty"); }
-    double res = _mem.data()[_front];
-    return res;
+    if (is_empty()) { throw std::out_of_range("Buffer ring is empty"); }
+    return (*this)[0];
 }
 inline double Vector::back() const
 {
-    if (_mem.is_empty()) { throw std::out_of_range("Buffer ring is empty"); }
-    double res = _mem.data()[_back];
-    return res;
+    if (is_empty()) { throw std::out_of_range("Buffer ring is empty"); }
+    return (*this)[(*this).size()-1];
 }
 inline void Vector::size_decrease() noexcept
 {
-    (*this)._mem._size--;
+    _mem._size--;
 }
 
 inline void Vector::size_increase() noexcept
 {
-    (*this)._mem._size++;
+    _mem._size++;
 }
 inline double& Vector::set_front() {
     if (is_empty()) {

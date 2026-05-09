@@ -1,33 +1,32 @@
 #include "pch.h"
-#include "fraction.cpp"
 #include "fraction.h"
 //КОНСТРУКТОРЫ
 TEST(ClassFraction, check_default_constructor) {
 	Fraction f1;
-	EXPECT_EQ(f1.num(), 1);
+	EXPECT_EQ(f1.num(), 0);
 	EXPECT_EQ(f1.denom(), 1);
-};
+}
 TEST(ClassFraction, check_init_constructor) {
 	Fraction f1(1, 2);
 	EXPECT_EQ(f1.num(), 1);
 	EXPECT_EQ(f1.denom(), 2);
-};
+}
 TEST(ClassFraction, check_init_minus_constructor) {
 	Fraction f1(-1, 2);
 	EXPECT_EQ(f1.num(), -1);
 	EXPECT_EQ(f1.denom(), 2);
-};
+}
 TEST(ClassFraction, check_init_denom_zero_constructor) {
 	
 	EXPECT_THROW({
 		Fraction f1(1, 0); 
 	}, std::invalid_argument);
-};
+}
 TEST(ClassFraction, check_partion_init_constructor) {
 	Fraction f1(4);
 	EXPECT_EQ(f1.num(), 4);
 	EXPECT_EQ(f1.denom(), 1);
-};
+}
 TEST(ClassFraction, check_fraction_copy_constructor) {
 	Fraction f1(2, 5);
 	Fraction f2(f1);
@@ -79,36 +78,6 @@ TEST(ClassFraction, to_string_whole_number) {
     Fraction f1(5, 1);
     EXPECT_EQ(f1.to_string(), "5/1");
 }
-
-
-// max_delt
-TEST(ClassFraction, max_delt_coprime_numbers) {
-    EXPECT_EQ(max_delt(3, 7), 1);
-}
-
-TEST(ClassFraction, max_delt_common_divisor) {
-    EXPECT_EQ(max_delt(12, 18), 6);
-}
-
-TEST(ClassFraction, max_delt_one_is_multiple) {
-    EXPECT_EQ(max_delt(4, 8), 4);
-}
-
-TEST(ClassFraction, max_delt_with_negative) {
-    EXPECT_EQ(max_delt(-12, 18), 6);
-    EXPECT_EQ(max_delt(12, -18), 6);
-}
-
-TEST(ClassFraction, max_delt_with_zero) {
-    EXPECT_EQ(max_delt(0, 5), 5);
-    EXPECT_EQ(max_delt(5, 0), 5);
-}
-
-TEST(ClassFraction, max_delt_same_numbers) {
-    EXPECT_EQ(max_delt(7, 7), 7);
-}
-
-
 //АРИФМЕТИЧЕСКИЕ ОПЕРАЦИИ С ПРИСВОЕНИЕМ
 TEST(ClassFraction, op_add_assign_fraction_basic) {
     Fraction f1(1, 2);
@@ -266,7 +235,7 @@ TEST(ClassFraction, op_div_assign_fraction_negative) {
 TEST(ClassFraction, op_div_assign_fraction_by_zero) {
     Fraction f1(1, 2);
     Fraction f2(0, 1);
-    EXPECT_THROW(f1 /= f2, std::invalid_argument);
+    EXPECT_THROW(f1 /= f2, std::domain_error);
 }
 
 TEST(ClassFraction, op_div_assign_int_basic) {
@@ -285,7 +254,7 @@ TEST(ClassFraction, op_div_assign_int_negative) {
 
 TEST(ClassFraction, op_div_assign_int_by_zero) {
     Fraction f1(3, 4);
-    EXPECT_THROW(f1 /= 0, std::invalid_argument);
+    EXPECT_THROW(f1 /= 0, std::domain_error);
 }
 
 TEST(ClassFraction, op_assign_modifies_original) {
@@ -385,12 +354,12 @@ TEST(ClassFraction, op_div_int_basic) {
 TEST(ClassFraction, op_div_fraction_by_zero) {
     Fraction f1(1, 2);
     Fraction f2(0, 1);
-    EXPECT_THROW(f1 / f2, std::invalid_argument);
+    EXPECT_THROW(f1 / f2, std::domain_error);
 }
 
 TEST(ClassFraction, op_div_int_by_zero) {
     Fraction f1(3, 4);
-    EXPECT_THROW(f1 / 0, std::invalid_argument);
+    EXPECT_THROW(f1 / 0, std::domain_error);
 }
 
 TEST(ClassFraction, op_chain_arithmetic) {
@@ -563,4 +532,48 @@ TEST(ClassFraction, cmp_zero) {
     Fraction f2(0, 5);
     EXPECT_TRUE(f1 == f2);
     EXPECT_TRUE(f1 == 0);
+}
+
+TEST(BaseFractionIO, OutputPositiveFraction) {
+    BaseFraction f(3, 4);
+    std::ostringstream oss;
+    oss << f;
+    EXPECT_EQ(oss.str(), "3/4");
+}
+
+TEST(BaseFractionIO, OutputNegativeFraction) {
+    BaseFraction f(-5, 8);
+    std::ostringstream oss;
+    oss << f;
+    EXPECT_EQ(oss.str(), "-5/8");
+}
+
+TEST(BaseFractionIO, OutputZeroFraction) {
+    BaseFraction f(0, 5);
+    std::ostringstream oss;
+    oss << f;
+    // при нулевом числителе в конструкторе знаменатель становится 1
+    EXPECT_EQ(oss.str(), "0/1");
+}
+
+TEST(BaseFractionIO, InputValidFraction) {
+    std::istringstream iss("7/12");
+    BaseFraction f;
+    iss >> f;
+    EXPECT_EQ(f.num(), 7);
+    EXPECT_EQ(f.denom(), 12);
+}
+
+TEST(BaseFractionIO, InputWithSpaces) {
+    std::istringstream iss("  2 / 5 "); // пробелы внутри строки
+    BaseFraction f;
+    iss >> f;
+    EXPECT_EQ(f.num(), 2);
+    EXPECT_EQ(f.denom(), 5);
+}
+
+TEST(BaseFractionIO, InputInvalidFormatThrows) {
+    std::istringstream iss("abc");
+    BaseFraction f;
+    EXPECT_THROW(iss >> f, std::invalid_argument);
 }

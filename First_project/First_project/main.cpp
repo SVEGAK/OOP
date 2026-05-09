@@ -1,8 +1,8 @@
 #include <iostream>
 #include <iomanip>
 
-#define BULLS_AND_COWS
-
+//#define BULLS_AND_COWS
+#define GEOMETRY
 #ifdef GEOMETRY
 #include "geometry.h"
 #include "geometry_main.cpp"
