@@ -207,6 +207,12 @@ void Vector::erase(size_t pos)// pos - логический индекс
 	_front = 0;	_back = _front + size() - 1;
 }
 
+void Vector::shuffle() noexcept
+{
+
+
+}
+
 std::ostream& operator<<(std::ostream& os, const Vector& v) {
 	os << "{ ";
 	for (size_t i = 0; i < v.size(); i++) {

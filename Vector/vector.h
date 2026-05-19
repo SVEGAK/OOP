@@ -25,6 +25,7 @@ public:
     inline size_t front_pos() const;                // геттер индекса первого элемента
     inline size_t back_pos() const;                 // геттер индекса последнего элемента
 
+
     inline double& set_front();                       // сеттер первого элемента
     inline double& set_back();                        // сеттер последнего элемента
 
@@ -38,6 +39,7 @@ public:
     void pop_front();                               // удаление элемента из начала
     void pop_back();                                // удаление элемента из конца
     void erase(size_t pos);                         // удаление элемента по позиции
+    void shuffle() noexcept;
    
     
     Vector& operator=(const Vector& vector) noexcept;            // оператор присваивания

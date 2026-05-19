@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <stdexcept>
-//#define DEBUG
+#define DEBUG
 void check_user_answer(int* pc_num, int* user_num, bool* is_not_guessed, int len) {
 	int bulls_count = 0;
 	int* possible_cows = new int[len];

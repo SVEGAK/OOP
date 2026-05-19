@@ -30,7 +30,7 @@ TEST(ClassCDate, check_another_constructor) {
 	EXPECT_EQ(d1.month(), 3);
 	EXPECT_EQ(d1.day(), 1);
 }
-TEST(ClassCDate, check_set_year_constructor) {
+TEST(ClassCDate, check_set_year) {
 	ASSERT_NO_THROW(CDate d1);
 	CDate d1(2011, 3, 29);
 	d1.year(2023);
@@ -38,7 +38,7 @@ TEST(ClassCDate, check_set_year_constructor) {
 	EXPECT_EQ(d1.month(), 3);
 	EXPECT_EQ(d1.day(), 29);
 }
-TEST(ClassCDate, check_set_month_constructor) {
+TEST(ClassCDate, check_set_month) {
 	ASSERT_NO_THROW(CDate d1);
 	CDate d1(2011, 3, 29);
 	EXPECT_THROW(d1.month(29), std::invalid_argument);
@@ -47,7 +47,7 @@ TEST(ClassCDate, check_set_month_constructor) {
 	EXPECT_EQ(d1.month(), 5);
 	EXPECT_EQ(d1.day(), 29);
 }
-TEST(ClassCDate, check_set_day_constructor) {
+TEST(ClassCDate, check_set_day) {
 	ASSERT_NO_THROW(CDate d1);
 	CDate d1(2011, 3, 29);
 	d1.day(20);
@@ -55,7 +55,7 @@ TEST(ClassCDate, check_set_day_constructor) {
 	EXPECT_EQ(d1.month(), 3);
 	EXPECT_EQ(d1.day(), 20);
 }
-TEST(ClassCDate, check_add_months_constructor) {
+TEST(ClassCDate, check_add_months) {
 	
 	CDate d1(2011, 3, 29);
 	CDate d2;
@@ -64,7 +64,7 @@ TEST(ClassCDate, check_add_months_constructor) {
 	EXPECT_EQ(d2.month(), 4);
 	EXPECT_EQ(d2.day(), 29);
 }
-TEST(ClassCDate, check_add_year_constructor) {
+TEST(ClassCDate, check_add_year) {
 	
 	CDate d1(2011, 3, 29);
 	CDate d2;
@@ -73,7 +73,7 @@ TEST(ClassCDate, check_add_year_constructor) {
 	EXPECT_EQ(d2.month(), 3);
 	EXPECT_EQ(d2.day(), 29);
 }
-TEST(ClassCDate, check_add_day_constructor) {
+TEST(ClassCDate, check_add_day) {
 
 	CDate d1(2011, 4, 1);
 	CDate d2;
