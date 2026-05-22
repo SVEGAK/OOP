@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <random>
 Vector::Vector(size_t size) {//конструктор по умолчанию+размеру
 	MemData object(size);
 	_front = 0;
@@ -209,7 +210,46 @@ void Vector::erase(size_t pos)// pos - логический индекс
 
 void Vector::shuffle() noexcept
 {
+	srand(static_cast<unsigned>(time(nullptr)));//Алгоритм фишера-йетса
+	if (is_empty()) { return; }
+	value_type t;
+	for (size_t i = size() - 1; i > 0; i--) {
+		size_t j = rand() % (i + 1);
+		t = (*this)[j];
+		(*this)[j] = (*this)[i];
+		(*this)[i] = t;
+	}
 
+}
+
+void Vector::quicksort(size_t low,size_t high) noexcept
+{
+	if (low < high) {
+		size_t p = partition(high, low);
+		quicksort(low, p);
+		quicksort(p + 1, high);
+	}
+
+}
+
+size_t Vector::partition(size_t high,size_t low) noexcept
+{
+	size_t pivot = (*this)[rand() % (high - low + 1) + low];//опорный элемент[low;high]
+	low--; high++;
+	while (true) {
+		do {
+			low++;
+		} while ((*this)[low] < pivot);
+		do {
+			high--;
+		} while ((*this)[high] > pivot);
+		if (low >= high) {
+			return high;
+		}
+		value_type k = (*this)[low];
+		(*this)[low] = (*this)[high];
+		(*this)[high] = k;
+	}
 
 }
 

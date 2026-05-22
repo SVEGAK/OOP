@@ -1067,4 +1067,31 @@ TEST(ClassVector, combination_push_pop_insert_erase_n) {
     EXPECT_DOUBLE_EQ(v[3], 8.0);
     EXPECT_DOUBLE_EQ(v[4], 9.0);
 }
+TEST(VectorTest, ShuffleChangesOrder) {
+    Vector v = { 1, 2, 3, 4, 5 };
+    Vector original = v;
+
+    std::cout << "Original: ";
+    for (size_t i = 0; i < original.size(); ++i)
+        std::cout << original[i] << " ";
+    std::cout << std::endl;
+
+    v.shuffle();
+
+    std::cout << "Shuffled: ";
+    for (size_t i = 0; i < v.size(); ++i)
+        std::cout << v[i] << " ";
+    std::cout << std::endl;
+    EXPECT_EQ(v.size(), original.size());
+}
+TEST(VectorTest, QuickSort) {
+    Vector v1 = { 1, 2, 3, 4, 5 };
+    Vector v2 = { 2, 3, 1 , 5, 4};
+
+    v2.quicksort();
+    EXPECT_EQ(v1.size(), v2.size());
+    for (size_t i = 0; i < 5; i++) {
+        EXPECT_EQ(v1[i], v2[i]);
+    }
+}
 #endif

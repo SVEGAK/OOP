@@ -40,6 +40,8 @@ public:
     void pop_back();                                // удаление элемента из конца
     void erase(size_t pos);                         // удаление элемента по позиции
     void shuffle() noexcept;
+    void quicksort(size_t low = 0, size_t high = size() - 1) noexcept;
+    size_t partition(size_t low,size_t high) noexcept;
    
     
     Vector& operator=(const Vector& vector) noexcept;            // оператор присваивания
@@ -127,6 +129,5 @@ inline double& Vector::set_back() {
     if (is_empty()) {
         throw std::out_of_range("Vector::back() called on empty vector");
     }
-    //size_t last_index = (_back - 1 + _mem.capacity()) % _mem.capacity();
     return _mem._data[_back];
 }
