@@ -40,8 +40,8 @@ public:
     void pop_back();                                // удаление элемента из конца
     void erase(size_t pos);                         // удаление элемента по позиции
     void shuffle() noexcept;
-    void quicksort(size_t low = 0, size_t high = size() - 1) noexcept;
-    size_t partition(size_t low,size_t high) noexcept;
+    void quicksort(int low, int high) noexcept;
+    int partition(int low,int high) noexcept;
    
     
     Vector& operator=(const Vector& vector) noexcept;            // оператор присваивания

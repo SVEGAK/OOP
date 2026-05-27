@@ -1088,7 +1088,7 @@ TEST(VectorTest, QuickSort) {
     Vector v1 = { 1, 2, 3, 4, 5 };
     Vector v2 = { 2, 3, 1 , 5, 4};
 
-    v2.quicksort();
+    v2.quicksort(0,v1.size()-1);
     EXPECT_EQ(v1.size(), v2.size());
     for (size_t i = 0; i < 5; i++) {
         EXPECT_EQ(v1[i], v2[i]);

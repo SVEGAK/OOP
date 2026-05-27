@@ -222,20 +222,20 @@ void Vector::shuffle() noexcept
 
 }
 
-void Vector::quicksort(size_t low,size_t high) noexcept
+void Vector::quicksort(int low,int high) noexcept
 {
 	if (low < high) {
-		size_t p = partition(high, low);
+		int p = partition(high, low);
 		quicksort(low, p);
 		quicksort(p + 1, high);
 	}
 
 }
 
-size_t Vector::partition(size_t high,size_t low) noexcept
+int Vector::partition(int high,int low) noexcept
 {
-	size_t pivot = (*this)[rand() % (high - low + 1) + low];//опорный элемент[low;high]
-	low--; high++;
+	int pivot = (*this)[rand() % (high - low + 1) + low];//опорный элемент[low;high]
+	low--; high++;//чтобы начать с начала и использовать при этом do while
 	while (true) {
 		do {
 			low++;
